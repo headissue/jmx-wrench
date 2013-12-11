@@ -1,0 +1,215 @@
+/opt/headissue/amd64/jdk1.7.0_09/bin/java -ea -Didea.launcher.port=7538
+/-Didea.launcher.bin.path=/home/wormi/opt/idea-IU-123.123/bin
+/--Dfile.encoding=UTF-8 -classpath
+/--/home/wormi/opt/idea-IU-123.123/lib/idea_rt.jar:/home/wormi/opt/idea-IU-123.123/plugins/junit/lib/junit-rt.jar:/opt/headissue/amd64/jdk1.7.0_09/jre/lib/resources.jar:/opt/headissue/amd64/jdk1.7.0_09/jre/lib/jfr.jar:/opt/headissue/amd64/jdk1.7.0_09/jre/lib/plugin.jar:/opt/headissue/amd64/jdk1.7.0_09/jre/lib/jce.jar:/opt/headissue/amd64/jdk1.7.0_09/jre/lib/rt.jar:/opt/headissue/amd64/jdk1.7.0_09/jre/lib/javaws.jar:/opt/headissue/amd64/jdk1.7.0_09/jre/lib/jsse.jar:/opt/headissue/amd64/jdk1.7.0_09/jre/lib/deploy.jar:/opt/headissue/amd64/jdk1.7.0_09/jre/lib/jfxrt.jar:/opt/headissue/amd64/jdk1.7.0_09/jre/lib/management-agent.jar:/opt/headissue/amd64/jdk1.7.0_09/jre/lib/charsets.jar:/opt/headissue/amd64/jdk1.7.0_09/jre/lib/ext/sunec.jar:/opt/headissue/amd64/jdk1.7.0_09/jre/lib/ext/zipfs.jar:/opt/headissue/amd64/jdk1.7.0_09/jre/lib/ext/sunjce_provider.jar:/opt/headissue/amd64/jdk1.7.0_09/jre/lib/ext/dnsns.jar:/opt/headissue/amd64/jdk1.7.0_09/jre/lib/ext/sunpkcs11.jar:/opt/headissue/amd64/jdk1.7.0_09/jre/lib/ext/localedata.jar:/home/wormi/workspace/mticket/target/test-classes:/home/wormi/workspace/mticket/target/classes:/home/wormi/opt/idea-IU-123.123/lib/junit-4.10.jar
+/--/com.intellij.rt.execution.application.AppMain
+/--/com.intellij.rt.execution.junit.JUnitStarter -ideVersion5
+/--/com.headissue.wrench.WrenchTest,showBeans
+
+Domains:
+	Domain = Catalina
+	Domain = JMImplementation
+	Domain = Users
+	Domain = com.headissue.sediments.integration
+	Domain = com.sun.management
+	Domain = java.lang
+	Domain = java.nio
+	Domain = java.util.logging
+
+MBeanServer default domain = DefaultDomain
+
+MBean count = 121
+
+Query MBeanServer MBeans:
+	ObjectName =
+Catalina:j2eeType=Filter,name=SensepitchFilter,WebModule=//localhost/,J2EEApplication=none,J2EEServer=none
+	ObjectName =
+Catalina:j2eeType=Filter,name=SolrRequestFilter,WebModule=//localhost/,J2EEApplication=none,J2EEServer=none
+	ObjectName = Catalina:j2eeType=Filter,name=filter partner
+authKey,WebModule=//localhost/,J2EEApplication=none,J2EEServer=none
+	ObjectName =
+Catalina:j2eeType=Servlet,name=Dereferer,WebModule=//localhost/,J2EEApplication=none,J2EEServer=none
+	ObjectName =
+Catalina:j2eeType=Servlet,name=FacebookingImageServlet,WebModule=//localhost/,J2EEApplication=none,J2EEServer=none
+	ObjectName =
+Catalina:j2eeType=Servlet,name=Generate204Servlet,WebModule=//localhost/,J2EEApplication=none,J2EEServer=none
+	ObjectName =
+Catalina:j2eeType=Servlet,name=Go,WebModule=//localhost/,J2EEApplication=none,J2EEServer=none
+	ObjectName =
+Catalina:j2eeType=Servlet,name=GuideExtraEditorRestful,WebModule=//localhost/,J2EEApplication=none,J2EEServer=none
+	ObjectName = Catalina:j2eeType=Servlet,name=Jahia Pid
+Url,WebModule=//localhost/,J2EEApplication=none,J2EEServer=none
+	ObjectName =
+Catalina:j2eeType=Servlet,name=JavascriptProbeServlet,WebModule=//localhost/,J2EEApplication=none,J2EEServer=none
+	ObjectName = Catalina:j2eeType=Servlet,name=Resource
+Queries,WebModule=//localhost/,J2EEApplication=none,J2EEServer=none
+	ObjectName = Catalina:j2eeType=Servlet,name=asset
+servlet,WebModule=//localhost/,J2EEApplication=none,J2EEServer=none
+	ObjectName =
+Catalina:j2eeType=Servlet,name=default,WebModule=//localhost/,J2EEApplication=none,J2EEServer=none
+	ObjectName = Catalina:j2eeType=Servlet,name=dump
+servlet,WebModule=//localhost/,J2EEApplication=none,J2EEServer=none
+	ObjectName = Catalina:j2eeType=Servlet,name=export
+guide,WebModule=//localhost/,J2EEApplication=none,J2EEServer=none
+	ObjectName =
+Catalina:j2eeType=Servlet,name=guide,WebModule=//localhost/,J2EEApplication=none,J2EEServer=none
+	ObjectName = Catalina:j2eeType=Servlet,name=guide image store
+servlet,WebModule=//localhost/,J2EEApplication=none,J2EEServer=none
+	ObjectName = Catalina:j2eeType=Servlet,name=jahia
+proxy,WebModule=//localhost/,J2EEApplication=none,J2EEServer=none
+	ObjectName =
+Catalina:j2eeType=Servlet,name=jsp,WebModule=//localhost/,J2EEApplication=none,J2EEServer=none
+	ObjectName = Catalina:j2eeType=Servlet,name=order
+proxy,WebModule=//localhost/,J2EEApplication=none,J2EEServer=none
+	ObjectName = Catalina:j2eeType=Servlet,name=pdf
+servlet,WebModule=//localhost/,J2EEApplication=none,J2EEServer=none
+	ObjectName = Catalina:j2eeType=Servlet,name=shop
+seatmaps,WebModule=//localhost/,J2EEApplication=none,J2EEServer=none
+	ObjectName =
+Catalina:j2eeType=Servlet,name=static-resource,WebModule=//localhost/,J2EEApplication=none,J2EEServer=none
+	ObjectName = Catalina:j2eeType=Servlet,name=testShop
+proxy,WebModule=//localhost/,J2EEApplication=none,J2EEServer=none
+	ObjectName = Catalina:j2eeType=Servlet,name=testShop
+seatmaps,WebModule=//localhost/,J2EEApplication=none,J2EEServer=none
+	ObjectName =
+Catalina:j2eeType=Servlet,name=vcalendar,WebModule=//localhost/,J2EEApplication=none,J2EEServer=none
+	ObjectName =
+Catalina:j2eeType=Filter,name=UTF8CharacterEncodingFilter,WebModule=//localhost/shop,J2EEApplication=none,J2EEServer=none
+	ObjectName =
+Catalina:j2eeType=Servlet,name=default,WebModule=//localhost/shop,J2EEApplication=none,J2EEServer=none
+	ObjectName =
+Catalina:j2eeType=Servlet,name=jsp,WebModule=//localhost/shop,J2EEApplication=none,J2EEServer=none
+	ObjectName = Catalina:j2eeType=Servlet,name=shop azv
+proxy,WebModule=//localhost/shop,J2EEApplication=none,J2EEServer=none
+	ObjectName = Catalina:j2eeType=Servlet,name=shop basis
+proxy,WebModule=//localhost/shop,J2EEApplication=none,J2EEServer=none
+	ObjectName = Catalina:j2eeType=Servlet,name=shop blank
+proxy,WebModule=//localhost/shop,J2EEApplication=none,J2EEServer=none
+	ObjectName = Catalina:j2eeType=Servlet,name=shop brt
+proxy,WebModule=//localhost/shop,J2EEApplication=none,J2EEServer=none
+	ObjectName = Catalina:j2eeType=Servlet,name=shop dt
+proxy,WebModule=//localhost/shop,J2EEApplication=none,J2EEServer=none
+	ObjectName = Catalina:j2eeType=Servlet,name=shop editor
+proxy,WebModule=//localhost/shop,J2EEApplication=none,J2EEServer=none
+	ObjectName = Catalina:j2eeType=Servlet,name=shop ehc
+proxy,WebModule=//localhost/shop,J2EEApplication=none,J2EEServer=none
+	ObjectName = Catalina:j2eeType=Servlet,name=shop eka
+proxy,WebModule=//localhost/shop,J2EEApplication=none,J2EEServer=none
+	ObjectName = Catalina:j2eeType=Servlet,name=shop fis
+proxy,WebModule=//localhost/shop,J2EEApplication=none,J2EEServer=none
+	ObjectName = Catalina:j2eeType=Servlet,name=shop ift
+proxy,WebModule=//localhost/shop,J2EEApplication=none,J2EEServer=none
+	ObjectName = Catalina:j2eeType=Servlet,name=shop mehrsprachig
+proxy,WebModule=//localhost/shop,J2EEApplication=none,J2EEServer=none
+	ObjectName = Catalina:j2eeType=Servlet,name=shop mks
+proxy,WebModule=//localhost/shop,J2EEApplication=none,J2EEServer=none
+	ObjectName = Catalina:j2eeType=Servlet,name=shop mph
+proxy,WebModule=//localhost/shop,J2EEApplication=none,J2EEServer=none
+	ObjectName = Catalina:j2eeType=Servlet,name=shop mvt
+proxy,WebModule=//localhost/shop,J2EEApplication=none,J2EEServer=none
+	ObjectName = Catalina:j2eeType=Servlet,name=shop psangebot
+proxy,WebModule=//localhost/shop,J2EEApplication=none,J2EEServer=none
+	ObjectName = Catalina:j2eeType=Servlet,name=shop pto
+proxy,WebModule=//localhost/shop,J2EEApplication=none,J2EEServer=none
+	ObjectName = Catalina:j2eeType=Servlet,name=shop rbx
+proxy,WebModule=//localhost/shop,J2EEApplication=none,J2EEServer=none
+	ObjectName = Catalina:j2eeType=Servlet,name=shop ttt
+proxy,WebModule=//localhost/shop,J2EEApplication=none,J2EEServer=none
+	ObjectName = Catalina:j2eeType=Servlet,name=shop xgames
+proxy,WebModule=//localhost/shop,J2EEApplication=none,J2EEServer=none
+	ObjectName =
+Catalina:j2eeType=WebModule,name=//localhost/,J2EEApplication=none,J2EEServer=none
+	ObjectName =
+Catalina:j2eeType=WebModule,name=//localhost/shop,J2EEApplication=none,J2EEServer=none
+	ObjectName = Catalina:type=Cache,host=localhost,context=/
+	ObjectName = Catalina:type=Cache,host=localhost,context=/shop
+	ObjectName = Catalina:type=Connector,port=8009
+	ObjectName = Catalina:type=Connector,port=8897
+	ObjectName = Catalina:type=Connector,port=8899
+	ObjectName = Catalina:type=Deployer,host=localhost
+	ObjectName = Catalina:type=Engine
+	ObjectName =
+	Catalina:type=GlobalRequestProcessor,name="ajp-bio-8009"
+	ObjectName =
+	Catalina:type=GlobalRequestProcessor,name="http-bio-8897"
+	ObjectName =
+	Catalina:type=GlobalRequestProcessor,name="http-bio-8899"
+	ObjectName = Catalina:type=Host,host=localhost
+	ObjectName =
+	Catalina:type=JspMonitor,name=jsp,WebModule=//localhost/,J2EEApplication=none,J2EEServer=none
+	ObjectName =
+	Catalina:type=JspMonitor,name=jsp,WebModule=//localhost/shop,J2EEApplication=none,J2EEServer=none
+	ObjectName = Catalina:type=Loader,context=/,host=localhost
+	ObjectName = Catalina:type=Loader,context=/shop,host=localhost
+	ObjectName = Catalina:type=MBeanFactory
+	ObjectName = Catalina:type=Manager,context=/,host=localhost
+	ObjectName = Catalina:type=Manager,context=/shop,host=localhost
+	ObjectName = Catalina:type=Mapper,port=8009
+	ObjectName = Catalina:type=Mapper,port=8897
+	ObjectName = Catalina:type=Mapper,port=8899
+	ObjectName = Catalina:type=NamingResources,context=/,host=localhost
+	ObjectName =
+	Catalina:type=NamingResources,context=/shop,host=localhost
+	ObjectName = Catalina:type=NamingResources
+	ObjectName = Catalina:type=ProtocolHandler,port=8009
+	ObjectName = Catalina:type=ProtocolHandler,port=8897
+	ObjectName = Catalina:type=ProtocolHandler,port=8899
+	ObjectName =
+	Catalina:type=Realm,realmPath=/realm0,context=/,host=localhost
+	ObjectName =
+	Catalina:type=Realm,realmPath=/realm0/realm0,context=/,host=localhost
+	ObjectName = Catalina:type=Realm,realmPath=/realm0
+	ObjectName = Catalina:type=Realm,realmPath=/realm0/realm0
+	ObjectName =
+	Catalina:type=Resource,resourcetype=Global,class=org.apache.catalina.UserDatabase,name="UserDatabase"
+	ObjectName = Catalina:type=Server
+	ObjectName = Catalina:type=ServerClassLoader,name=common
+	ObjectName = Catalina:type=Service
+	ObjectName = Catalina:type=StringCache
+	ObjectName = Catalina:type=ThreadPool,name="ajp-bio-8009"
+	ObjectName = Catalina:type=ThreadPool,name="http-bio-8897"
+	ObjectName = Catalina:type=ThreadPool,name="http-bio-8899"
+	ObjectName =
+	Catalina:type=Valve,context=/,host=localhost,name=BasicAuthenticator
+	ObjectName =
+	Catalina:type=Valve,context=/,host=localhost,name=StandardContextValve
+	ObjectName =
+	Catalina:type=Valve,context=/shop,host=localhost,name=NonLoginAuthenticator
+	ObjectName =
+	Catalina:type=Valve,context=/shop,host=localhost,name=StandardContextValve
+	ObjectName = Catalina:type=Valve,host=localhost,name=AccessLogValve
+	ObjectName =
+	Catalina:type=Valve,host=localhost,name=ErrorReportValve
+	ObjectName =
+	Catalina:type=Valve,host=localhost,name=StandardHostValve
+	ObjectName = Catalina:type=Valve,name=StandardEngineValve
+	ObjectName =
+	Catalina:type=WebappClassLoader,context=/,host=localhost
+	ObjectName =
+	Catalina:type=WebappClassLoader,context=/shop,host=localhost
+	ObjectName = JMImplementation:type=MBeanServerDelegate
+	ObjectName = Users:type=UserDatabase,database=UserDatabase
+	ObjectName =
+	com.headissue.sediments.integration:type=ServiceLifecycle,name=crm
+	ObjectName =
+	com.headissue.sediments.integration:type=ServiceWatchdog,name=crm
+	ObjectName = com.sun.management:type=HotSpotDiagnostic
+	ObjectName = java.lang:type=ClassLoading
+	ObjectName = java.lang:type=Compilation
+	ObjectName = java.lang:type=GarbageCollector,name=PS MarkSweep
+	ObjectName = java.lang:type=GarbageCollector,name=PS Scavenge
+	ObjectName = java.lang:type=Memory
+	ObjectName = java.lang:type=MemoryManager,name=CodeCacheManager
+	ObjectName = java.lang:type=MemoryPool,name=Code Cache
+	ObjectName = java.lang:type=MemoryPool,name=PS Eden Space
+	ObjectName = java.lang:type=MemoryPool,name=PS Old Gen
+	ObjectName = java.lang:type=MemoryPool,name=PS Perm Gen
+	ObjectName = java.lang:type=MemoryPool,name=PS Survivor Space
+	ObjectName = java.lang:type=OperatingSystem
+	ObjectName = java.lang:type=Runtime
+	ObjectName = java.lang:type=Threading
+	ObjectName = java.nio:type=BufferPool,name=direct
+	ObjectName = java.nio:type=BufferPool,name=mapped
+	ObjectName = java.util.logging:type=Logging
+
+Process finished with exit code 0

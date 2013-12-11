@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module org.jetbrains.idea.maven.project.MavenProjectsManager.isMavenModule="true" type="JAVA_MODULE" version="4">
+  <component name="FacetManager">
+    <facet type="web" name="Web">
+      <configuration>
+        <descriptors>
+          <deploymentDescriptor name="web.xml" url="file://$MODULE_DIR$/web/WEB-INF/web.xml" />
+        </descriptors>
+        <webroots>
+          <root url="file://$MODULE_DIR$/src/main/webapp" relative="/" />
+        </webroots>
+        <sourceRoots />
+      </configuration>
+    </facet>
+    <facet type="jpa" name="JPA">
+      <configuration>
+        <setting name="validation-enabled" value="true" />
+        <setting name="provider-name" value="" />
+        <datasource-mapping />
+        <deploymentDescriptor name="persistence.xml" url="file://$MODULE_DIR$/../headissue-pigeon/src/main/resources/META-INF/persistence.xml" />
+      </configuration>
+    </facet>
+  </component>
+  <component name="NewModuleRootManager" inherit-compiler-output="false">
+    <output url="file://$MODULE_DIR$/../target/classes" />
+    <output-test url="file://$MODULE_DIR$/../target/test-classes" />
+    <content url="file://$MODULE_DIR$/..">
+      <sourceFolder url="file://$MODULE_DIR$/src/main/webapp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/test/java" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/main/java" isTestSource="false" />
+      <excludeFolder url="file://$MODULE_DIR$/../target" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module-library" scope="TEST">
+      <library>
+        <CLASSES>
+          <root url="jar://$APPLICATION_HOME_DIR$/lib/junit-4.10.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="library" name="Maven: org.cache2k:cache2k-core:0.15-SNAPSHOT" level="project" />
+    <orderEntry type="module" module-name="headissue-sensepitch" />
+    <orderEntry type="module" module-name="headissue-sediments" />
+    <orderEntry type="module" module-name="mticket-v2" />
+  </component>
+</module>
+
