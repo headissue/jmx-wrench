@@ -6,16 +6,16 @@
     <display-name>wrench</display-name>
 
     <security-role>
-        <role-name>pigeonk-admin</role-name>
+        <role-name>mtadmin</role-name>
     </security-role>
 
     <security-constraint>
         <web-resource-collection>
-            <web-resource-name>Editor</web-resource-name>
+            <web-resource-name>Admin</web-resource-name>
             <url-pattern>/*</url-pattern>
         </web-resource-collection>
         <auth-constraint>
-            <role-name>pigeonk-admin</role-name>
+            <role-name>mtadmin</role-name>
         </auth-constraint>
     </security-constraint>
 </web-app>
