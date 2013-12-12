@@ -6,7 +6,7 @@
     <display-name>wrench</display-name>
 
     <security-role>
-        <role-name>mtadmin</role-name>
+        <role-name>mteditor</role-name>
     </security-role>
 
     <security-constraint>
@@ -15,7 +15,7 @@
             <url-pattern>/*</url-pattern>
         </web-resource-collection>
         <auth-constraint>
-            <role-name>mtadmin</role-name>
+            <role-name>mteditor</role-name>
         </auth-constraint>
     </security-constraint>
 </web-app>
