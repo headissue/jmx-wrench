@@ -8,6 +8,8 @@ import javax.management.MBeanServer;
 import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
 import java.lang.management.ManagementFactory;
+import java.util.Iterator;
+import java.util.Map;
 
 
 /**
@@ -38,12 +40,38 @@ public class Wrench{
 
   }
 
+  public void tune(Map<String, String[]> _params) {
+    for (Iterator<String> iterator = _params.keySet().iterator(); iterator.hasNext(); ) {
+      String key = iterator.next();
+      String[] values = _params.get(key);
+
+      try {
+        if ("setMax".equals(key)) {
+          setMaxSessionsForTestShop(Integer.valueOf(values[0]));
+        } else if ("setWatermark".equals(key)) {
+          setWatermarkForTestShop(Integer.valueOf(values[0]));
+        }
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+
+      String concatenatedValues = "";
+      for (int i = 0; i < values.length; i++) {
+        concatenatedValues += values[i] + ", ";
+      }
+    }
+  }
+
   public void setWatermarkForTestShop (int _sessions) {
-    portalWebshopProxy.setSessionOverloadWatermark(_sessions);
+    if (_sessions < getSessionLimitOfTestShop() && _sessions > 0) {
+      portalWebshopProxy.setSessionOverloadWatermark(_sessions);
+    }
   }
 
   public void setMaxSessionsForTestShop(int _sessions) {
-    portalWebshopProxy.setSessionLimit(_sessions);
+    if (_sessions > 0 ) {
+      portalWebshopProxy.setSessionLimit(_sessions);
+    }
   }
 
   public int getActiveSessionsOfTestShop() {
@@ -59,5 +87,13 @@ public class Wrench{
   }
 
 
+  public static String help() {
+    StringBuilder help = new StringBuilder();
+    help.append("<p>").append("valid parameters are:").append("</p>");
+    help.append("<p>").append("setMax - to set allowed sessions").append("</p>");
+    help.append("<p>").append("setWatermark - to set where the warning kicks in").append("</p>");
+    help.append("<p>").append("like <a href=\"\">https://mt.demo.h7e.eu/wrench/tune.jsp?setMax=30&setWatermark=20</a>").append("</p>");
 
+    return help.toString();
+  }
 }
