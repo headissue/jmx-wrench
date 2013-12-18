@@ -1,99 +1,121 @@
 package com.headissue.wrench;
 
-import com.headissue.sediments.runtime.JmxUtil;
-import com.headissue.sensepitch.proxy.PortalWebshopProxy;
+import org.apache.commons.lang.StringUtils;
 
-import javax.management.JMX;
-import javax.management.MBeanServer;
-import javax.management.MalformedObjectNameException;
-import javax.management.ObjectName;
+import javax.management.*;
 import java.lang.management.ManagementFactory;
-import java.util.Iterator;
+import java.util.Date;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
-
-/**
- * Created with IntelliJ IDEA.
- * User: wormi
- * Date: 09.12.13
- * Time: 08:57
- * To change this template use File | Settings | File Templates.
- */
 public class Wrench{
 
   private final MBeanServer mbs;
+  private final static Wrench instance = new Wrench();
+  public static final String ATTRIBUTE = "attr";
+  public static final String SIGNATURE = "sig";
+  public static final String OPERATION = "op";
+  public static final String PARAMETER = "pa";
+  public static final String QUERY = "q";
+  public static final String SIGNATURE_DELIMITER = ",";
+  public static final String VALUE = "val";
 
-
-  private final ObjectName portalWebshopProxyName;
-  private final PortalWebshopProxy.MgmtMBean portalWebshopProxy;
-
-
-
-  public Wrench() {
+  private Wrench() {
     mbs = ManagementFactory.getPlatformMBeanServer();
+  }
+
+  public static Wrench getInstance() {
+    return instance;
+  }
+
+  public String tune(Map<String, String[]> _params) throws MalformedObjectNameException, MBeanException, InstanceNotFoundException, ReflectionException {
+
+    ObjectName _name;
+    Object returnValue = null;
+    String _operation;
+    String[] _parameters;
+    String[] _signature = null;
+
+    _name = new ObjectName(_params.get(QUERY)[0]);
+    _operation = _params.get(OPERATION)[0];
+    _parameters = _params.get(PARAMETER);
+    if (StringUtils.isNotBlank(_params.get(SIGNATURE)[0])) {
+      _signature = _params.get(SIGNATURE)[0].split(SIGNATURE_DELIMITER);
+    }
+
+    if ( _name != null && _operation != null) {
+      returnValue = mbs.invoke(_name,  _operation, _parameters,  _signature);
+    }
+
+   if (returnValue != null) return returnValue.toString();
+    return "nothing";
+  }
+
+  public Set<ObjectName> getObjectNames() {
+    return new TreeSet<>(mbs.queryNames(null, null));
+  }
+
+  public MBeanInfo getInfo(String name) throws MalformedObjectNameException, IntrospectionException, InstanceNotFoundException, ReflectionException {
+    MBeanInfo info = mbs.getMBeanInfo(new ObjectName(name));
+    return info;
+  }
+
+  public String getAttributeValue(String name, String attribute) throws AttributeNotFoundException, MBeanException, InstanceNotFoundException, MalformedObjectNameException {
+    Object attr;
     try {
-      portalWebshopProxyName = new ObjectName(JmxUtil.constructName(PortalWebshopProxy.class, "testShopProxy"));
-    } catch (MalformedObjectNameException e) {
-      throw new RuntimeException(e);
+      attr = mbs.getAttribute(new ObjectName(name), attribute);
+    } catch (ReflectionException e) {
+      e.printStackTrace();
+      return "caught ReflectionException";
     }
-    portalWebshopProxy = JMX.newMBeanProxy(mbs, portalWebshopProxyName, PortalWebshopProxy.MgmtMBean.class);
-
+    if (attr != null) return attr.toString();
+    return "null";
   }
 
-  public void tune(Map<String, String[]> _params) {
-    for (Iterator<String> iterator = _params.keySet().iterator(); iterator.hasNext(); ) {
-      String key = iterator.next();
-      String[] values = _params.get(key);
+  public void setAttribute(String objectName, Map<String, String[]> _params) throws MalformedObjectNameException, AttributeNotFoundException, MBeanException, ReflectionException, InstanceNotFoundException, InvalidAttributeValueException, ClassNotFoundException, IntrospectionException {
 
-      try {
-        if ("setMax".equals(key)) {
-          setMaxSessionsForTestShop(Integer.valueOf(values[0]));
-        } else if ("setWatermark".equals(key)) {
-          setWatermarkForTestShop(Integer.valueOf(values[0]));
-        }
-      } catch (Exception e) {
-        e.printStackTrace();
+    String attributeToSet = _params.get(ATTRIBUTE)[0];
+    String valueString = _params.get(VALUE)[0];
+    MBeanAttributeInfo[] attributes = mbs.getMBeanInfo(new ObjectName(objectName)).getAttributes();
+    String typeString = getTypeForAtrribute(attributeToSet, attributes);
+    Object value = getRightTypedValue(valueString, typeString);
+    Attribute attribute = new Attribute(attributeToSet, value);
+    mbs.setAttribute(new ObjectName(objectName), attribute);
+  }
+
+  private Object getRightTypedValue(String valueString, String typeString) {
+    if ("int".equals(typeString)) {
+      if (StringUtils.isBlank(valueString)) return 0;
+      return Integer.valueOf(valueString);
+    } else if ("long".equals(typeString)) {
+      if (StringUtils.isBlank(valueString)) return 0;
+      return Long.valueOf(valueString);
+    } else if ("boolean".equals(typeString)) {
+      return Boolean.valueOf(valueString);
+    } else if ("java.util.Date".equals(typeString)) {
+      if (StringUtils.isBlank(valueString)) return new Date(0);
+      return new Date(Integer.valueOf(valueString));
+    } else {
+      return valueString;
+    }
+  }
+
+  private String getTypeForAtrribute(String attributeToSet, MBeanAttributeInfo[] attributes) {
+    for (MBeanAttributeInfo attributeInfo : attributes) {
+      if (attributeInfo.getName().equals(attributeToSet)) {
+        return attributeInfo.getType();
       }
-
-      String concatenatedValues = "";
-      for (int i = 0; i < values.length; i++) {
-        concatenatedValues += values[i] + ", ";
-      }
     }
+    return null;
   }
 
-  public void setWatermarkForTestShop (int _sessions) {
-    if (_sessions < getSessionLimitOfTestShop() && _sessions > 0) {
-      portalWebshopProxy.setSessionOverloadWatermark(_sessions);
+  public static String getSignatureString(MBeanParameterInfo[] signature) {
+    StringBuilder sb = new StringBuilder();
+    for (MBeanParameterInfo mBeanParameterInfo : signature) {
+      sb.append(mBeanParameterInfo.getType()).append(SIGNATURE_DELIMITER);
     }
+    return sb.toString();
   }
 
-  public void setMaxSessionsForTestShop(int _sessions) {
-    if (_sessions > 0 ) {
-      portalWebshopProxy.setSessionLimit(_sessions);
-    }
-  }
-
-  public int getActiveSessionsOfTestShop() {
-    return portalWebshopProxy.getActiveSessions();
-  }
-
-  public int getSessionLimitOfTestShop() {
-    return portalWebshopProxy.getSessionLimit();
-  }
-
-  public int getWatermarkOfTestShop() {
-    return portalWebshopProxy.getSessionOverloadWatermark();
-  }
-
-
-  public static String help() {
-    StringBuilder help = new StringBuilder();
-    help.append("<p>").append("valid parameters are:").append("</p>");
-    help.append("<p>").append("setMax - to set allowed sessions").append("</p>");
-    help.append("<p>").append("setWatermark - to set where the warning kicks in").append("</p>");
-    help.append("<p>").append("like <a href=\"\">https://mt.demo.h7e.eu/wrench/tune.jsp?setMax=30&setWatermark=20</a>").append("</p>");
-
-    return help.toString();
-  }
 }

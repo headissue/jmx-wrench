@@ -1,30 +1,17 @@
 <%@
   page import="com.headissue.wrench.Wrench" %><%@
-  page import="java.util.Iterator" %><%@
   page import="java.util.Map" %><%
 
   Wrench wrench;
   {
-    wrench = new Wrench();
+    wrench = Wrench.getInstance();
   }
-%><h2>Parameters</h2>
-  <%=Wrench.help()%><%
 
-
+  String returnValue = "";
   Map<String, String[]> parameters = request.getParameterMap();
   if ( parameters != null) {
-    wrench.tune(parameters);
+    returnValue = wrench.tune(parameters);
   }
-
-  int active = wrench.getActiveSessionsOfTestShop();
-  int maxSessions = wrench.getSessionLimitOfTestShop();
-  int watermark = wrench.getWatermarkOfTestShop();
 %>
-<h2>Values</h2>
-<div>activeSessions</div>
-<div class="active"><%=active%></div>
-<div>max</div>
-<div class="max"><%=maxSessions%></div>
-<div>watermark</div>
-<div class="watermark"><%=watermark%></div>
-
+<h2>>> Execution returned <%=returnValue%> <<</h2>
+<a href='./displayInfo.jsp?<%=Wrench.QUERY%>=<%=parameters.get(Wrench.QUERY)[0]%>'>back to bean</a>
