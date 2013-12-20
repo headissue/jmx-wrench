@@ -73,31 +73,29 @@ public class Wrench{
     return "null";
   }
 
-  public void setAttribute(String objectName, Map<String, String[]> _params) throws MalformedObjectNameException, AttributeNotFoundException, MBeanException, ReflectionException, InstanceNotFoundException, InvalidAttributeValueException, ClassNotFoundException, IntrospectionException {
+  public void setAttribute(String objectName, Map<String, String[]> _params)
+    throws MalformedObjectNameException, AttributeNotFoundException, MBeanException, ReflectionException, InstanceNotFoundException, InvalidAttributeValueException, ClassNotFoundException, IntrospectionException {
 
     String attributeToSet = _params.get(ATTRIBUTE)[0];
     String valueString = _params.get(VALUE)[0];
     MBeanAttributeInfo[] attributes = mbs.getMBeanInfo(new ObjectName(objectName)).getAttributes();
     String typeString = getTypeForAtrribute(attributeToSet, attributes);
-    Object value = getRightTypedValue(valueString, typeString);
+    Object value = convertToCorrectlyTypeValue(valueString, typeString);
     Attribute attribute = new Attribute(attributeToSet, value);
     mbs.setAttribute(new ObjectName(objectName), attribute);
   }
 
-  private Object getRightTypedValue(String valueString, String typeString) {
-    if ("int".equals(typeString)) {
-      if (StringUtils.isBlank(valueString)) return 0;
-      return Integer.valueOf(valueString);
-    } else if ("long".equals(typeString)) {
-      if (StringUtils.isBlank(valueString)) return 0;
-      return Long.valueOf(valueString);
-    } else if ("boolean".equals(typeString)) {
-      return Boolean.valueOf(valueString);
-    } else if ("java.util.Date".equals(typeString)) {
-      if (StringUtils.isBlank(valueString)) return new Date(0);
-      return new Date(Integer.valueOf(valueString));
+  private static Object convertToCorrectlyTypeValue(String value, String type) {
+    if ("int".equals(type)) {
+      return Integer.valueOf(value);
+    } else if ("long".equals(type)) {
+      return Long.valueOf(value);
+    } else if ("boolean".equals(type)) {
+      return Boolean.valueOf(value);
+    } else if ("java.util.Date".equals(type)) {
+      return new Date(Integer.valueOf(value));
     } else {
-      return valueString;
+      return value;
     }
   }
 

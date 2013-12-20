@@ -1,6 +1,5 @@
 <%@
   page import="com.headissue.wrench.Wrench" %><%@
-  page import="com.jwdt.mticket.URLEncoder" %><%@
   page import="javax.management.MBeanAttributeInfo" %><%@
   page import="javax.management.MBeanInfo" %><%@
   page import="javax.management.MBeanOperationInfo" %><%@
@@ -12,10 +11,7 @@
      * https://localhost:8897/wrench/displayInfo.jsp?val=y&attr=objectName&q=Catalina%3AJ2EEApplication%3Dnone%2CJ2EEServer%3Dnone%2CWebModule%3D%2F%2Flocalhost%2F%2Cj2eeType%3DServlet%2Cname%3DDereferer
      */
 
-  Wrench wrench;
-  {
-    wrench = Wrench.getInstance();
-  }
+  Wrench wrench = Wrench.getInstance();
   String objectName = request.getParameter(Wrench.QUERY);
   MBeanInfo info = wrench.getInfo(objectName);
   Map<String, String[]> parameterMap = request.getParameterMap();
@@ -33,7 +29,7 @@
   for (MBeanAttributeInfo mBeanAttributeInfo : mBeanAttributeInfos) {
 %>
    <tr>
-     <td><%out.write(mBeanAttributeInfo.getType());%></td>
+     <td><%= mBeanAttributeInfo.getType() %></td>
      <td><%out.write(mBeanAttributeInfo.getName());%></td>
      <td><%out.write(wrench.getAttributeValue(objectName, mBeanAttributeInfo.getName()));%></td><%
 

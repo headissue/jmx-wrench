@@ -3,18 +3,16 @@
   page import="javax.management.ObjectName" %>
 <%@ page import="java.util.Set" %>
 <%@ page import="java.util.Iterator" %>
-<%@ page import="com.jwdt.mticket.URLEncoder" %>
+<%@ page import="java.net.URLEncoder" %>
 <%
 
-  Wrench wrench;
-  {
-    wrench = Wrench.getInstance();
-  }
+  Wrench wrench = Wrench.getInstance();
+
   Set<ObjectName> objectNameSet = wrench.getObjectNames();
 
   for (Iterator<ObjectName> objectNameIterator = objectNameSet.iterator(); objectNameIterator.hasNext(); ) {
     ObjectName name = objectNameIterator.next();
 %>
-    <p><a href="./displayInfo.jsp?q=<%=URLEncoder.encode(name.getCanonicalName())%>"><%=name.getCanonicalName()%></a></p><%
+    <p><a href="./displayInfo.jsp?q=<%= URLEncoder.encode(name.getCanonicalName(), response.getCharacterEncoding()) %>"><%= name.getCanonicalName() %></a></p><%
   }
 %>
