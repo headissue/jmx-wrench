@@ -21,4 +21,21 @@
         <servlet-name>set</servlet-name>
         <url-pattern>/set/*</url-pattern>
     </servlet-mapping>
+
+    <security-role>
+        <role-name>mtadmin</role-name>
+    </security-role>
+
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>Admin</web-resource-name>
+            <url-pattern>/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>mtadmin</role-name>
+        </auth-constraint>
+    </security-constraint>
+    <login-config>
+        <auth-method>BASIC</auth-method>
+    </login-config>
 </web-app>
