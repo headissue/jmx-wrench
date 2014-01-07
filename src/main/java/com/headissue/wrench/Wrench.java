@@ -29,10 +29,13 @@ public class Wrench{
     return instance;
   }
 
-  public String tune(Map<String, String[]> _params) throws MalformedObjectNameException, MBeanException, InstanceNotFoundException, ReflectionException {
+  public Object invoke(ObjectName _name, String _operation, String[] _parameters, String[] _signature) throws Exception {
+    return mbs.invoke(_name, _operation, _parameters, _signature);
+  }
+
+  public Object invoke(Map<String, String[]> _params) throws Exception {
 
     ObjectName _name;
-    Object returnValue = null;
     String _operation;
     String[] _parameters;
     String[] _signature = null;
@@ -43,24 +46,48 @@ public class Wrench{
     if (StringUtils.isNotBlank(_params.get(SIGNATURE)[0])) {
       _signature = _params.get(SIGNATURE)[0].split(SIGNATURE_DELIMITER);
     }
+    return invoke(_name,  _operation, _parameters,  _signature);
+  }
 
-    if ( _name != null && _operation != null) {
-      returnValue = mbs.invoke(_name,  _operation, _parameters,  _signature);
+  /**
+   * Returns all Beans registered in the MBeanServer. When an ObjectName is provided, the result is
+   * filtered.
+   * @param q
+   * @return Set of registered Beans
+   * @throws Exception
+   */
+  public Set<ObjectName> queryObjectNames(String q) throws Exception, MalformedObjectNameException{
+    ObjectName _query = null;
+    if (StringUtils.isNotBlank(q)) {
+      if (q.contains(":")) {
+        _query =new ObjectName(q + "*");
+      } else {
+        _query = new ObjectName(q+"*:*");
+      }
     }
-
-   if (returnValue != null) return returnValue.toString();
-    return "nothing";
+    return new TreeSet<>(mbs.queryNames(_query, null));
   }
 
-  public Set<ObjectName> getObjectNames() {
-    return new TreeSet<>(mbs.queryNames(null, null));
+  public Set<ObjectName> getAllObjectNames() throws Exception{
+    return queryObjectNames("");
   }
 
-  public MBeanInfo getInfo(String name) throws MalformedObjectNameException, IntrospectionException, InstanceNotFoundException, ReflectionException {
-    MBeanInfo info = mbs.getMBeanInfo(new ObjectName(name));
+
+    public MBeanInfo getInfo(ObjectName objectName) throws Exception {
+    MBeanInfo info = mbs.getMBeanInfo(objectName);
     return info;
   }
 
+  /**
+   * queries attribute values and returns them in their toString() form. When read is denied, an error message is returned
+   * @param name
+   * @param attribute
+   * @return
+   * @throws AttributeNotFoundException
+   * @throws MBeanException
+   * @throws InstanceNotFoundException
+   * @throws MalformedObjectNameException
+   */
   public String getAttributeValue(String name, String attribute) throws AttributeNotFoundException, MBeanException, InstanceNotFoundException, MalformedObjectNameException {
     Object attr;
     try {
@@ -73,44 +100,42 @@ public class Wrench{
     return "null";
   }
 
-  public void setAttribute(String objectName, Map<String, String[]> _params)
-    throws MalformedObjectNameException, AttributeNotFoundException, MBeanException, ReflectionException, InstanceNotFoundException, InvalidAttributeValueException, ClassNotFoundException, IntrospectionException {
-
-    String attributeToSet = _params.get(ATTRIBUTE)[0];
-    String valueString = _params.get(VALUE)[0];
-    MBeanAttributeInfo[] attributes = mbs.getMBeanInfo(new ObjectName(objectName)).getAttributes();
-    String typeString = getTypeForAtrribute(attributeToSet, attributes);
-    Object value = convertToCorrectlyTypeValue(valueString, typeString);
-    Attribute attribute = new Attribute(attributeToSet, value);
-    mbs.setAttribute(new ObjectName(objectName), attribute);
+  public void setBeanAttribute(String objectName, Map<String, String[]> _params) throws Exception {
+    String _attributeToSet = _params.get(ATTRIBUTE)[0];
+    String _value = _params.get(VALUE)[0];
+    setBeanAttribute(objectName, _attributeToSet, _value);
   }
 
-  private static Object convertToCorrectlyTypeValue(String value, String type) {
-    if ("int".equals(type)) {
-      return Integer.valueOf(value);
-    } else if ("long".equals(type)) {
-      return Long.valueOf(value);
-    } else if ("boolean".equals(type)) {
-      return Boolean.valueOf(value);
-    } else if ("java.util.Date".equals(type)) {
-      return new Date(Integer.valueOf(value));
-    } else {
-      return value;
+public void setBeanAttribute(String _objectName, String _attribute, String _value) throws Exception {
+    MBeanAttributeInfo[] beanAttributes = mbs.getMBeanInfo(new ObjectName(_objectName)).getAttributes();
+    String typeString = getTypeOfAttribute(_attribute, beanAttributes);
+    Object v = convertToCorrectlyTypeValue(_value, typeString);
+    Attribute attribute = new Attribute(_attribute, v);
+    mbs.setAttribute(new ObjectName(_objectName), attribute);
+  }
+
+  private static Object convertToCorrectlyTypeValue(String _value, String _type) {
+    switch (_type) {
+      case "int": return Integer.valueOf(_value);
+      case "long": return Integer.valueOf(_value);
+      case "Date":  return new Date(Integer.valueOf(_value));
+      case "boolean": return Boolean.valueOf(_value);
     }
+    return _value;
   }
 
-  private String getTypeForAtrribute(String attributeToSet, MBeanAttributeInfo[] attributes) {
-    for (MBeanAttributeInfo attributeInfo : attributes) {
-      if (attributeInfo.getName().equals(attributeToSet)) {
+  private String getTypeOfAttribute(String _attribute, MBeanAttributeInfo[] _beanAttributes) {
+    for (MBeanAttributeInfo attributeInfo : _beanAttributes) {
+      if (attributeInfo.getName().equals(_attribute)) {
         return attributeInfo.getType();
       }
     }
     return null;
   }
 
-  public static String getSignatureString(MBeanParameterInfo[] signature) {
+  public static String getSignatureString(MBeanParameterInfo[] _signature) {
     StringBuilder sb = new StringBuilder();
-    for (MBeanParameterInfo mBeanParameterInfo : signature) {
+    for (MBeanParameterInfo mBeanParameterInfo : _signature) {
       sb.append(mBeanParameterInfo.getType()).append(SIGNATURE_DELIMITER);
     }
     return sb.toString();

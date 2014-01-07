@@ -10,7 +10,7 @@
   String returnValue = "";
   Map<String, String[]> parameters = request.getParameterMap();
   if ( parameters != null) {
-    returnValue = wrench.tune(parameters);
+    returnValue = (String) wrench.invoke(parameters);
   }
 %>
 <h2>>> Execution returned <%=returnValue%> <<</h2>
