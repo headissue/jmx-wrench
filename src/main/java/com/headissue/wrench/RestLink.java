@@ -9,13 +9,13 @@ package com.headissue.wrench;
 public class RestLink {
 
   private final String QUERY = "/q/";
-  private final String INFO = "/info/";
+  private final String SET = "/set/";
 
   public final String query;
-  public final String info;
+  public final String set;
 
   public RestLink(String contextPath) {
     query = contextPath + QUERY;
-    info = contextPath + INFO;
+    set = contextPath + SET;
   }
 }

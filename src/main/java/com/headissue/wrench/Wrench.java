@@ -80,7 +80,7 @@ public class Wrench{
 
   /**
    * queries attribute values and returns them in their toString() form. When read is denied, an error message is returned
-   * @param name
+   * @param objectName
    * @param attribute
    * @return
    * @throws AttributeNotFoundException
@@ -88,13 +88,15 @@ public class Wrench{
    * @throws InstanceNotFoundException
    * @throws MalformedObjectNameException
    */
-  public String getAttributeValue(String name, String attribute) throws AttributeNotFoundException, MBeanException, InstanceNotFoundException, MalformedObjectNameException {
+  public String getAttributeValue(ObjectName objectName, String attribute) throws AttributeNotFoundException, MBeanException, InstanceNotFoundException, MalformedObjectNameException {
     Object attr;
     try {
-      attr = mbs.getAttribute(new ObjectName(name), attribute);
+      attr = mbs.getAttribute(objectName, attribute);
     } catch (ReflectionException e) {
       e.printStackTrace();
-      return "caught ReflectionException";
+      return "inaccessible - ReflectionException";
+    } catch (UnsupportedOperationException e) {
+      return "inaccessible - UnsupportedOperationException";
     }
     if (attr != null) return attr.toString();
     return "null";

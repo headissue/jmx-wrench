@@ -5,6 +5,23 @@
 
     <display-name>wrench</display-name>
 
+    <servlet>
+        <servlet-name>query</servlet-name>
+        <jsp-file>/query.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>query</servlet-name>
+        <url-pattern>/q/*</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>set</servlet-name>
+        <jsp-file>/set.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>set</servlet-name>
+        <url-pattern>/set/*</url-pattern>
+    </servlet-mapping>
+
     <security-role>
         <role-name>mtadmin</role-name>
     </security-role>

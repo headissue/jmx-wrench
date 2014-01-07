@@ -2,8 +2,10 @@ package com.headissue.wrench;
 
 import javax.management.ObjectName;
 import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.Map;
 
 import static java.net.URLEncoder.encode;
 
@@ -31,12 +33,37 @@ public class Util {
   public static String encodeObjectNameQuery(ObjectName name, String encoding ) throws UnsupportedEncodingException {
     String domain = name.getDomain();
     Hashtable<String, String> keyPropertyMap = name.getKeyPropertyList();
-    StringBuilder properties = new StringBuilder();
+    StringBuilder encodedProperties = new StringBuilder();
     for (Iterator iterator = keyPropertyMap.keySet().iterator(); iterator.hasNext(); ) {
       String key = (String) iterator.next();
-      properties.append(key).append("=").append(keyPropertyMap.get(key));
+      encodedProperties
+        .append(encode(key, encoding))
+        .append('=')
+        .append(encode(keyPropertyMap.get(key), encoding));
+      if (iterator.hasNext()) {
+        encodedProperties.append('&');
+      }
+    }
+    return encode(domain, encoding) + '?' + encodedProperties.toString();
+  }
+
+  public static String decodeObjectNameQuery(String name, Map<String, String[]> parameters,  String encoding ) throws UnsupportedEncodingException {
+
+    StringBuilder properties = new StringBuilder();
+
+    for (Iterator iterator = parameters.keySet().iterator(); iterator.hasNext(); ) {
+      String key = (String) iterator.next();
+      properties
+        .append(URLDecoder.decode(key, encoding))
+        .append('=')
+        .append(URLDecoder.decode(parameters.get(key)[0],encoding));
+      if (iterator.hasNext()) {
+        properties.append(',');
+      }
 
     }
-    return encode(domain, encoding) + "?" + encode(properties.toString(), encoding);
+    return URLDecoder.decode(name, encoding) + ":"  + properties;
+
   }
+
 }
