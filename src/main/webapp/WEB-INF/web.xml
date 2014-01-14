@@ -7,11 +7,19 @@
 
     <servlet>
         <servlet-name>query</servlet-name>
-        <jsp-file>/query.jsp</jsp-file>
+        <jsp-file>/q.jsp</jsp-file>
     </servlet>
     <servlet-mapping>
         <servlet-name>query</servlet-name>
         <url-pattern>/q/*</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>invoke</servlet-name>
+        <jsp-file>/invoke.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>invoke</servlet-name>
+        <url-pattern>/invoke/*</url-pattern>
     </servlet-mapping>
     <servlet>
         <servlet-name>set</servlet-name>

@@ -13,7 +13,7 @@
 
   Wrench wrench = Wrench.getInstance();
 
-  String q = Util.removeLeadingSlash(request.getPathInfo());
+  String path = Util.removeLeadingSlash(request.getPathInfo());
   if(request.getCharacterEncoding() == null) {
     request.setCharacterEncoding("UTF-8");
   }
@@ -23,21 +23,39 @@
 
   if (StringUtils.isNotBlank(request.getQueryString())) {
     // encoded ObjectName
+    String objectClassPath = path;
     Map<String, String[]> parameters = request.getParameterMap();
-    objectNameSet.add(new ObjectName(Util.decodeObjectNameQuery(q, parameters, characterEncoding)));
+    String fullyQualifiedObjectName = Util.decodeObjectNameQuery(objectClassPath, parameters, characterEncoding);
+    objectNameSet.add(new ObjectName(fullyQualifiedObjectName));
   } else {
     // query for ObjectNames
     try {
-      objectNameSet = wrench.queryObjectNames(q);
+      objectNameSet = wrench.queryObjectNames(path);
     } catch (MalformedObjectNameException e) {
       error = e;
     }
   }
 
   RestLink restLink = new RestLink(request.getContextPath());
+
+
+%>
+<!-- remove when design becomes an issue -->
+<head>
+  <style>
+    .error {
+      color: red;
+    }
+  </style>
+</head>
+  <form name="search" method="get" action="<%=restLink.query%>" size="100" role="search">
+    <input type="text" name="class" placeholder="fully qualified object name" value=""><input type="submit" class="send" value="submit">
+  </form><%
+
+  // maybe create dedicated jsp for errors
   if (error != null) {
 %>
-    <p>Query "<%=escapeHtml(q)%>" löste einen Fehler aus!</p>
+    <p>Query "<%=escapeHtml(path)%>" löste einen Fehler aus!</p>
     <p>Dies kann bei Sonderzeichen im Objektnamen passieren.</p>
     <p><a href="<%=restLink.query%>">Alle anzeigen</a> oder nach Pfad suchen, z.b.</p>
     <p><a href="<%=restLink.query%>java">java</a></p>
@@ -45,7 +63,7 @@
 
   } else if (objectNameSet == null || objectNameSet.size() == 0) {
 %>
-    <p>Query "<%=escapeHtml(q)%>" ohne Ergebnis</p>
+    <p>Query "<%=escapeHtml(path)%>" ohne Ergebnis</p>
     <p>Dies kann bei Sonderzeichen im Objektnamen passieren.</p>
     <p><a href="<%=restLink.query%>">Alle anzeigen</a> oder nach Pfad suchen, z.b.</p>
     <p><a href="<%=restLink.query%>java">java</a></p>
@@ -53,6 +71,7 @@
 
   } else if (objectNameSet.size() == 1) {
 
+    // single search result; display details
     ObjectName objectName = objectNameSet.iterator().next();
     MBeanInfo info = wrench.getInfo(objectName);
 %>
@@ -67,8 +86,17 @@
 %>
       <tr>
         <td><%= mBeanAttributeInfo.getType() %></td>
-        <td><%=mBeanAttributeInfo.getName()%></td>
-        <td><%=wrench.getAttributeValue(objectName, mBeanAttributeInfo.getName())%></td><%
+        <td><%=mBeanAttributeInfo.getName()%></td><%
+
+        String value;
+        try {
+          value = wrench.getAttributeValue(objectName, mBeanAttributeInfo.getName());
+        } catch (Exception e) {
+          value = "<p><span class=\"error\">inaccessible </span></p>"+
+            "<p>"+e.getLocalizedMessage()+"</p>";
+        }
+%>
+        <td><%=value%></td><%
 
         if (mBeanAttributeInfo.isWritable()) {
 %>
@@ -92,27 +120,23 @@
 
       MBeanOperationInfo[] mBeanOperationInfos = info.getOperations();
       for (MBeanOperationInfo mBeanOperationInfo : mBeanOperationInfos) {
-        MBeanParameterInfo[] signature = mBeanOperationInfo.getSignature();
-        StringBuilder signatureString = new StringBuilder();
-        for (int i = 0; i < signature.length; i++) {
-          MBeanParameterInfo mBeanParameterInfo = signature[i];
-          signatureString.append("(").append(mBeanParameterInfo.getType()).append(" ").append(mBeanParameterInfo.getName()).append(")");
-        }
+        MBeanParameterInfo[] operationParameters = mBeanOperationInfo.getSignature();
+        String signatureString = Util.humanReadableSignature(operationParameters);
 %>
         <tr>
-          <td><%out.write(mBeanOperationInfo.getReturnType());%></td>
-          <td><%out.write(mBeanOperationInfo.getName());%><%=signatureString.toString()%></td>
+          <td><%=mBeanOperationInfo.getReturnType()%></td>
+          <td><%=mBeanOperationInfo.getName()%><%=signatureString%></td>
           <td>
-            <form action="tune.jsp" method="GET"><%
+            <form action="<%=restLink.invoke%>" method="GET"><%
 
-            for (int i = 0; i < signature.length; i++) {
+            for (int i = 0; i < operationParameters.length; i++) {
 %>
               <input type="text" name="<%=Wrench.PARAMETER%>"><%
 
             }
 %>
             <input type="hidden" name="<%=Wrench.OPERATION%>" value='<%=mBeanOperationInfo.getName()%>'/>
-            <input type="hidden" name="<%=Wrench.SIGNATURE%>" value='<%=Wrench.getSignatureString(mBeanOperationInfo.getSignature())%>'/>
+            <input type="hidden" name="<%=Wrench.SIGNATURE%>" value='<%=Wrench.getSignature(mBeanOperationInfo.getSignature())%>'/>
             <input type="hidden" name="<%=Wrench.QUERY%>" value='<%=objectName%>'/>
             <input type="submit" value="execute"/>
           </form>
@@ -123,7 +147,7 @@
 %>
     </table><%
   } else {
-    // list all objects
+    // list all objects found
 
     for (Iterator<ObjectName> objectNameIterator = objectNameSet.iterator(); objectNameIterator.hasNext(); ) {
       ObjectName name = objectNameIterator.next();

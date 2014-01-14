@@ -20,6 +20,7 @@ public class Wrench{
   public static final String QUERY = "q";
   public static final String SIGNATURE_DELIMITER = ",";
   public static final String VALUE = "val";
+  public static final String CLASS = "class";
 
   private Wrench() {
     mbs = ManagementFactory.getPlatformMBeanServer();
@@ -46,17 +47,21 @@ public class Wrench{
     if (StringUtils.isNotBlank(_params.get(SIGNATURE)[0])) {
       _signature = _params.get(SIGNATURE)[0].split(SIGNATURE_DELIMITER);
     }
-    return invoke(_name,  _operation, _parameters,  _signature);
+    try {
+      return "Execution returned: " + invoke(_name,  _operation, _parameters,  _signature);
+    } catch (Exception e) {
+      return  "<span class=\"error\">could not execute invoke<span>" + e;
+    }
   }
 
   /**
-   * Returns all Beans registered in the MBeanServer. When an ObjectName is provided, the result is
+   * Returns all Beans registered in the MBeanServer. When an objects classPath is provided, the result is
    * filtered.
    * @param q
    * @return Set of registered Beans
    * @throws Exception
    */
-  public Set<ObjectName> queryObjectNames(String q) throws Exception, MalformedObjectNameException{
+  public Set<ObjectName> queryObjectNames(String q) throws Exception{
     ObjectName _query = null;
     if (StringUtils.isNotBlank(q)) {
       if (q.contains(":")) {
@@ -73,50 +78,37 @@ public class Wrench{
   }
 
 
-    public MBeanInfo getInfo(ObjectName objectName) throws Exception {
-    MBeanInfo info = mbs.getMBeanInfo(objectName);
-    return info;
-  }
-
   /**
-   * queries attribute values and returns them in their toString() form. When read is denied, an error message is returned
-   * @param objectName
-   * @param attribute
+   * Reads a specific value from a Bean
+   * @param _objectName
+   * @param _attribute
    * @return
-   * @throws AttributeNotFoundException
-   * @throws MBeanException
-   * @throws InstanceNotFoundException
-   * @throws MalformedObjectNameException
+   * @throws Exception
    */
-  public String getAttributeValue(ObjectName objectName, String attribute) throws AttributeNotFoundException, MBeanException, InstanceNotFoundException, MalformedObjectNameException {
+  public String getAttributeValue(ObjectName _objectName, String _attribute) throws Exception {
     Object attr;
-    try {
-      attr = mbs.getAttribute(objectName, attribute);
-    } catch (ReflectionException e) {
-      e.printStackTrace();
-      return "inaccessible - ReflectionException";
-    } catch (UnsupportedOperationException e) {
-      return "inaccessible - UnsupportedOperationException";
+    attr = mbs.getAttribute(_objectName, _attribute);
+    if (attr == null) {
+      return "null";
     }
-    if (attr != null) return attr.toString();
-    return "null";
+    return attr.toString();
   }
 
-  public void setBeanAttribute(String objectName, Map<String, String[]> _params) throws Exception {
+  public void setBeanAttribute(String _objectName, Map<String, String[]> _params) throws Exception {
     String _attributeToSet = _params.get(ATTRIBUTE)[0];
     String _value = _params.get(VALUE)[0];
-    setBeanAttribute(objectName, _attributeToSet, _value);
+    setBeanAttribute(_objectName, _attributeToSet, _value);
   }
 
-public void setBeanAttribute(String _objectName, String _attribute, String _value) throws Exception {
+  public void setBeanAttribute(String _objectName, String _attribute, String _value) throws Exception {
     MBeanAttributeInfo[] beanAttributes = mbs.getMBeanInfo(new ObjectName(_objectName)).getAttributes();
     String typeString = getTypeOfAttribute(_attribute, beanAttributes);
-    Object v = convertToCorrectlyTypeValue(_value, typeString);
+    Object v = convertToCorrectlyTypedValue(_value, typeString);
     Attribute attribute = new Attribute(_attribute, v);
     mbs.setAttribute(new ObjectName(_objectName), attribute);
   }
 
-  private static Object convertToCorrectlyTypeValue(String _value, String _type) {
+  private static Object convertToCorrectlyTypedValue(String _value, String _type) {
     switch (_type) {
       case "int": return Integer.valueOf(_value);
       case "long": return Integer.valueOf(_value);
@@ -135,12 +127,17 @@ public void setBeanAttribute(String _objectName, String _attribute, String _valu
     return null;
   }
 
-  public static String getSignatureString(MBeanParameterInfo[] _signature) {
+  public static String getSignature(MBeanParameterInfo[] _signature) {
     StringBuilder sb = new StringBuilder();
     for (MBeanParameterInfo mBeanParameterInfo : _signature) {
       sb.append(mBeanParameterInfo.getType()).append(SIGNATURE_DELIMITER);
     }
     return sb.toString();
+  }
+
+    public MBeanInfo getInfo(ObjectName _objectName) throws Exception {
+    MBeanInfo info = mbs.getMBeanInfo(_objectName);
+    return info;
   }
 
 }
