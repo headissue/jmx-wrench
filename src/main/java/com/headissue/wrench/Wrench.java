@@ -2,17 +2,29 @@ package com.headissue.wrench;
 
 import org.apache.commons.lang.StringUtils;
 
-import javax.management.*;
+import javax.management.Attribute;
+import javax.management.JMException;
+import javax.management.MBeanAttributeInfo;
+import javax.management.MBeanInfo;
+import javax.management.MBeanParameterInfo;
+import javax.management.MBeanServer;
+import javax.management.ObjectName;
 import java.lang.management.ManagementFactory;
 import java.util.Date;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
-public class Wrench{
+/**
+ * Executed operations on a managed bean server.
+ * 
+ * @author wormi
+ * @see <a href="https://to.headissue.net/radar/browse/MTP-4990">MTP-4990</a>
+ */
+public class Wrench {
 
-  private final MBeanServer mbs;
-  private final static Wrench instance = new Wrench();
+  private final MBeanServer managedBeanServer;
+  private static final Wrench instance = new Wrench();
   public static final String ATTRIBUTE = "attr";
   public static final String SIGNATURE = "sig";
   public static final String OPERATION = "op";
@@ -23,33 +35,45 @@ public class Wrench{
   public static final String CLASS = "class";
 
   private Wrench() {
-    mbs = ManagementFactory.getPlatformMBeanServer();
+    managedBeanServer = ManagementFactory.getPlatformMBeanServer();
   }
 
   public static Wrench getInstance() {
     return instance;
   }
 
-  public Object invoke(ObjectName _name, String _operation, String[] _parameters, String[] _signature) throws Exception {
-    return mbs.invoke(_name, _operation, _parameters, _signature);
+  /**
+   * Invokes an operation with the given parameters and signature on an object managed by the MBean Server
+   * @param _name
+   * @param _operation
+   * @param _parameters
+   * @param _signature
+   * @return
+   * @throws JMException
+   */
+  public Object invoke(ObjectName _name, String _operation, String[] _parameters, String[] _signature)
+    throws JMException { // "throws Exception" is never a good idea
+    return managedBeanServer.invoke(_name, _operation, _parameters, _signature);
   }
 
-  public Object invoke(Map<String, String[]> _params) throws Exception {
+  public Object invoke(Map<String, String[]> _params) {
 
     ObjectName _name;
-    String _operation;
-    String[] _parameters;
+
+
+    String _operation = _params.get(OPERATION)[0];
+    String[] _operationParameters = _params.get(PARAMETER);
+
     String[] _signature = null;
 
-    _name = new ObjectName(_params.get(QUERY)[0]);
-    _operation = _params.get(OPERATION)[0];
-    _parameters = _params.get(PARAMETER);
     if (StringUtils.isNotBlank(_params.get(SIGNATURE)[0])) {
       _signature = _params.get(SIGNATURE)[0].split(SIGNATURE_DELIMITER);
     }
     try {
-      return "Execution returned: " + invoke(_name,  _operation, _parameters,  _signature);
-    } catch (Exception e) {
+      _name = new ObjectName(_params.get(QUERY)[0]);
+      Object _result = invoke(_name,  _operation, _operationParameters,  _signature);
+      return "Execution returned: " + _result;
+    } catch (JMException e) {
       return  "<span class=\"error\">could not execute invoke<span>" + e;
     }
   }
@@ -70,7 +94,7 @@ public class Wrench{
         _query = new ObjectName(q+"*:*");
       }
     }
-    return new TreeSet<>(mbs.queryNames(_query, null));
+    return new TreeSet<>(managedBeanServer.queryNames(_query, null));
   }
 
   public Set<ObjectName> getAllObjectNames() throws Exception{
@@ -81,17 +105,16 @@ public class Wrench{
   /**
    * Reads a specific value from a Bean
    * @param _objectName
-   * @param _attribute
+   * @param _attributeName
    * @return
    * @throws Exception
    */
-  public String getAttributeValue(ObjectName _objectName, String _attribute) throws Exception {
-    Object attr;
-    attr = mbs.getAttribute(_objectName, _attribute);
-    if (attr == null) {
+  public String getAttributeValue(ObjectName _objectName, String _attributeName) throws Exception {
+    Object _attribute = managedBeanServer.getAttribute(_objectName, _attributeName);
+    if (_attribute == null) {
       return "null";
     }
-    return attr.toString();
+    return _attribute.toString();
   }
 
   public void setBeanAttribute(String _objectName, Map<String, String[]> _params) throws Exception {
@@ -100,28 +123,31 @@ public class Wrench{
     setBeanAttribute(_objectName, _attributeToSet, _value);
   }
 
-  public void setBeanAttribute(String _objectName, String _attribute, String _value) throws Exception {
-    MBeanAttributeInfo[] beanAttributes = mbs.getMBeanInfo(new ObjectName(_objectName)).getAttributes();
-    String typeString = getTypeOfAttribute(_attribute, beanAttributes);
-    Object v = convertToCorrectlyTypedValue(_value, typeString);
-    Attribute attribute = new Attribute(_attribute, v);
-    mbs.setAttribute(new ObjectName(_objectName), attribute);
+  public void setBeanAttribute(String _objectName, String _attributeName, String _value) throws Exception {
+    MBeanAttributeInfo[] _beanAttributes = managedBeanServer.getMBeanInfo(new ObjectName(_objectName)).getAttributes();
+    String _typeString = getTypeOfAttribute(_attributeName, _beanAttributes);
+    Object v = convertToCorrectlyTypedValue(_value, _typeString);
+    Attribute _attribute = new Attribute(_attributeName, v);
+    managedBeanServer.setAttribute(new ObjectName(_objectName), _attribute);
   }
 
   private static Object convertToCorrectlyTypedValue(String _value, String _type) {
     switch (_type) {
-      case "int": return Integer.valueOf(_value);
-      case "long": return Integer.valueOf(_value);
-      case "Date":  return new Date(Integer.valueOf(_value));
-      case "boolean": return Boolean.valueOf(_value);
+      case "int": // Fall through
+      case "long":
+        return Integer.valueOf(_value);
+      case "Date":
+        return new Date(Integer.valueOf(_value));
+      case "boolean":
+        return Boolean.valueOf(_value);
     }
     return _value;
   }
 
   private String getTypeOfAttribute(String _attribute, MBeanAttributeInfo[] _beanAttributes) {
-    for (MBeanAttributeInfo attributeInfo : _beanAttributes) {
-      if (attributeInfo.getName().equals(_attribute)) {
-        return attributeInfo.getType();
+    for (MBeanAttributeInfo _attributeInfo : _beanAttributes) {
+      if (_attributeInfo.getName().equals(_attribute)) {
+        return _attributeInfo.getType();
       }
     }
     return null;
@@ -129,15 +155,14 @@ public class Wrench{
 
   public static String getSignature(MBeanParameterInfo[] _signature) {
     StringBuilder sb = new StringBuilder();
-    for (MBeanParameterInfo mBeanParameterInfo : _signature) {
-      sb.append(mBeanParameterInfo.getType()).append(SIGNATURE_DELIMITER);
+    for (MBeanParameterInfo _mBeanParameterInfo : _signature) {
+      sb.append(_mBeanParameterInfo.getType()).append(SIGNATURE_DELIMITER);
     }
     return sb.toString();
   }
 
     public MBeanInfo getInfo(ObjectName _objectName) throws Exception {
-    MBeanInfo info = mbs.getMBeanInfo(_objectName);
-    return info;
+      return managedBeanServer.getMBeanInfo(_objectName);
   }
 
 }

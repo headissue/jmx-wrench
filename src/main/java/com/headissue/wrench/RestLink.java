@@ -1,8 +1,11 @@
 package com.headissue.wrench;
 
 /**
- * Provides common links for the REST service.
+ * Constructs common links for the REST service in respect to the given context path
  * The web.xml has to be changed accordingly.
+ *
+ * @author wormi
+ * @see <a href="https://to.headissue.net/radar/browse/MTP-4990">MTP-4990</a>
  */
 public class RestLink {
 
@@ -10,14 +13,15 @@ public class RestLink {
   private final String SET = "/set/";
   private static final String INVOKE = "/invoke/";
 
+  // FIXME Use getters here! We obtain a nicely capsuled, immutable object then
   public final String query;
   public final String set;
   public final String invoke;
 
-  public RestLink(String contextPath) {
-    query = contextPath + QUERY;
-    set = contextPath + SET;
-    invoke = contextPath + INVOKE;
+  public RestLink(String _contextPath) {
+    query = _contextPath + QUERY;
+    set = _contextPath + SET;
+    invoke = _contextPath + INVOKE;
 
   }
 }

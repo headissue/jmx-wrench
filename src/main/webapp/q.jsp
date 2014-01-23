@@ -4,12 +4,13 @@
   page import="com.headissue.wrench.Wrench" %><%@
   page import="org.apache.commons.lang.StringUtils" %><%@
   page import="static org.apache.commons.lang.StringEscapeUtils.escapeHtml" %><%@
-  page import="javax.management.*" %><%@
-  page import="java.net.URLEncoder" %><%@
-  page import="java.util.Iterator" %><%@
-  page import="java.util.LinkedHashSet" %><%@
-  page import="java.util.Map" %><%@
-  page import="java.util.Set" %><%
+  page import="javax.management.MBeanAttributeInfo" %><%@
+  page import="javax.management.MBeanInfo" %><%@
+  page import="javax.management.MBeanOperationInfo" %><%@
+  page import="javax.management.MBeanParameterInfo" %><%@
+  page import="javax.management.MalformedObjectNameException" %><%@ page import="javax.management.ObjectName" %><%@ page
+  import="java.net.URLEncoder" %><%@ page import="java.util.LinkedHashSet" %><%@ page import="java.util.Map" %><%@ page
+  import="java.util.Set" %><%
 
   Wrench wrench = Wrench.getInstance();
 
@@ -49,7 +50,8 @@
   </style>
 </head>
   <form name="search" method="get" action="<%=restLink.query%>" size="100" role="search">
-    <input type="text" name="class" placeholder="fully qualified object name" value=""><input type="submit" class="send" value="submit">
+    <input type="text" name="class" placeholder="fully qualified object name" value="">
+    <input type="submit" class="send" value="submit">
   </form><%
 
   // maybe create dedicated jsp for errors
@@ -61,7 +63,7 @@
     <p><a href="<%=restLink.query%>java">java</a></p>
     <p><a href="<%=restLink.query%>java.l">java.l</a></p><%
 
-  } else if (objectNameSet == null || objectNameSet.size() == 0) {
+  } else if (objectNameSet == null || objectNameSet.isEmpty()) {
 %>
     <p>Query "<%=escapeHtml(path)%>" ohne Ergebnis</p>
     <p>Dies kann bei Sonderzeichen im Objektnamen passieren.</p>
@@ -129,11 +131,10 @@
           <td>
             <form action="<%=restLink.invoke%>" method="GET"><%
 
-            for (int i = 0; i < operationParameters.length; i++) {
-%>
-              <input type="text" name="<%=Wrench.PARAMETER%>"><%
+              for (MBeanParameterInfo operationParameter : operationParameters) {
+         %><input type="text" name="<%=Wrench.PARAMETER%>"><%
 
-            }
+              }
 %>
             <input type="hidden" name="<%=Wrench.OPERATION%>" value='<%=mBeanOperationInfo.getName()%>'/>
             <input type="hidden" name="<%=Wrench.SIGNATURE%>" value='<%=Wrench.getSignature(mBeanOperationInfo.getSignature())%>'/>
@@ -148,11 +149,10 @@
     </table><%
   } else {
     // list all objects found
-
-    for (Iterator<ObjectName> objectNameIterator = objectNameSet.iterator(); objectNameIterator.hasNext(); ) {
-      ObjectName name = objectNameIterator.next();
+    for (ObjectName name : objectNameSet) {
 %>
-      <p><a href="<%=restLink.query%><%=Util.encodeObjectNameQuery(name, characterEncoding)%>"><%= escapeHtml(name.getCanonicalName())%></a></p><%
+      <p><a
+        href="<%=restLink.query%><%=Util.encodeObjectNameQuery(name, characterEncoding)%>"><%= escapeHtml(name.getCanonicalName())%></a></p><%
     }
   }
 %>
