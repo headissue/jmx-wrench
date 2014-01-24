@@ -15,7 +15,7 @@ public class UtilTest {
     assertEquals("", Util.removeLeadingSlash(""));
     assertEquals("", Util.removeLeadingSlash("/"));
     assertEquals("/", Util.removeLeadingSlash("//"));
-    assertEquals("/dd", Util.removeLeadingSlash("/dd/"));
+    assertEquals("dd/", Util.removeLeadingSlash("/dd/"));
     assertEquals("dd", Util.removeLeadingSlash("dd"));
     assertEquals("d/", Util.removeLeadingSlash("d/"));
     assertEquals("d", Util.removeLeadingSlash("/d"));
