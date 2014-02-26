@@ -31,7 +31,7 @@
     </servlet-mapping>
 
     <security-role>
-        <role-name>mtadmin</role-name>
+        <role-name>jmx-wrench</role-name>
     </security-role>
 
     <security-constraint>
@@ -40,7 +40,7 @@
             <url-pattern>/*</url-pattern>
         </web-resource-collection>
         <auth-constraint>
-            <role-name>mtadmin</role-name>
+            <role-name>jmx-wrench</role-name>
         </auth-constraint>
     </security-constraint>
     <login-config>
