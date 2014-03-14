@@ -1,9 +1,8 @@
-<%@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %><%@
   page import="com.headissue.wrench.RestLink" %><%@
   page import="com.headissue.wrench.Wrench" %><%@
-  page import="java.util.Map" %><%@
-  page import="java.net.URLEncoder" %>
-<%
+  page import="java.net.URLEncoder" %><%@
+  page import="java.util.Map" %><%@ include file="frag/decl.jspf"%><%
 
   Wrench wrench;
   {
@@ -25,6 +24,10 @@
         "<p>"+e.getLocalizedMessage()+"</p>";
     }
   }
-%>
+
+
+
+%><%@include file="frag/head.jspf"%>
 <h2><%=returnValue%></h2>
 <a href='<%=restLink.query%><%=URLEncoder.encode(parameters.get(Wrench.QUERY)[0], request.getCharacterEncoding())%>'>back to bean</a>
+<%@include file="frag/bottom.jspf"%>
