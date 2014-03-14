@@ -1,3 +1,5 @@
+less/style.less muss einmal compiliert werden. Das geht in IDEA über den LESS Compiler.
+
 Einfach zusammen mit MT deployen mit z.B. context path "/wrench"
 Zugriff auf die Seiten mit MT Admin Zugangsdaten
 
