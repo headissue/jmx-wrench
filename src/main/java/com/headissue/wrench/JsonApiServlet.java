@@ -15,7 +15,7 @@ import java.util.Set;
  * @author tobi
  */
 @WebServlet(name="api", urlPatterns = "/api")
-public class ApiServlet extends HttpServlet {
+public class JsonApiServlet extends HttpServlet {
 
 
   @Override

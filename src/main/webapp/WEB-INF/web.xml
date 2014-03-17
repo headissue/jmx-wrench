@@ -9,7 +9,7 @@
 
     <servlet>
       <servlet-name>api</servlet-name>
-      <servlet-class>com.headissue.wrench.ApiServlet</servlet-class>
+      <servlet-class>com.headissue.wrench.JsonApiServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>query</servlet-name>
