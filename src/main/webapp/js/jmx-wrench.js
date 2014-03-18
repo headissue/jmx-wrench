@@ -3,7 +3,7 @@ function initTypeahead(servletPrefix) {
   var engine = new Bloodhound({
     name: 'search',
     remote:  {
-      url:  "http://localhost:9000/wrench/api?q=%QUERY",
+      url:  servletPrefix + "/api?q=%QUERY",
       filter: function (parsedResponse) {
         // parsedResponse is the array returned from your backend
         console.log(parsedResponse.suggestions);
