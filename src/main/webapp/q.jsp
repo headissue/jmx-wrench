@@ -2,8 +2,8 @@
   page import="com.headissue.wrench.RestLink" %><%@
   page import="com.headissue.wrench.Util" %><%@
   page import="com.headissue.wrench.Wrench" %><%@
-  page import="org.apache.commons.lang.StringUtils" %><%@
-  page import="static org.apache.commons.lang.StringEscapeUtils.escapeHtml" %><%@
+  page import="org.apache.commons.lang3.StringUtils" %><%@
+  page import="static org.apache.commons.lang3.StringEscapeUtils.escapeHtml4" %><%@
   page import="javax.management.MBeanAttributeInfo" %><%@
   page import="javax.management.MBeanInfo" %><%@
   page import="javax.management.MBeanOperationInfo" %><%@
@@ -13,7 +13,8 @@
   page import="java.net.URLEncoder" %><%@
   page import="java.util.LinkedHashSet" %><%@
   page import="java.util.Map" %><%@
-  page import="java.util.Set" %><%@ page import="java.net.URLDecoder" %><%
+  page import="java.util.Set" %><%@
+  page import="java.net.URLDecoder" %><%
 
 
 
@@ -50,14 +51,16 @@
 <div class="row">
   <div class="col-lg-12">
   <form name="search" method="get" action="<%=restLink.query%>" size="100" role="search">
-    <input type="text" name="class" placeholder="fully qualified object name" value="">
-    <input type="submit" class="send" value="submit">
+    <div class="input-group">
+    <input class="form-control" type="text" name="class" placeholder="fully qualified object name" value="">
+    </div>
+    <input type="submit" class="send btn btn-primary" value="submit">
   </form><%
 
   // maybe create dedicated jsp for errors
   if (error != null) {
 %><p class="bg-danger">
-    <p>Query "<%=escapeHtml(path)%>" löste einen Fehler aus!</p>
+    <p>Query "<%=escapeHtml4(path)%>" löste einen Fehler aus!</p>
     <p>Dies kann bei Sonderzeichen im Objektnamen passieren.</p>
     <p><a href="<%=restLink.query%>">Alle anzeigen</a> oder nach Pfad suchen, z.b.</p>
     <p><a href="<%=restLink.query%>java">java</a></p>
@@ -66,7 +69,7 @@
 
   } else if (objectNameSet == null || objectNameSet.isEmpty()) {
 %><p class="bg-info">
-    <p>Query "<%=escapeHtml(path)%>" ohne Ergebnis</p>
+    <p>Query "<%=escapeHtml4(path)%>" ohne Ergebnis</p>
     <p>Dies kann bei Sonderzeichen im Objektnamen passieren.</p>
     <p><a href="<%=restLink.query%>">Alle anzeigen</a> oder nach Pfad suchen, z.b.</p>
     <p><a href="<%=restLink.query%>java">java</a></p>
@@ -172,12 +175,16 @@
 %>
     </table><%
   } else {
+    %><h1>Search result</h1><table class="table table-responsive"><%
     // list all objects found
     for (ObjectName name : objectNameSet) {
 %>
-      <p><a
-        href="<%=restLink.query%><%=Util.encodeObjectNameQuery(name, characterEncoding)%>"><%= escapeHtml(name.getCanonicalName())%></a></p><%
+      <tr><td><a
+        href="<%=restLink.query%><%=Util.encodeObjectNameQuery(name, characterEncoding)%>"
+        ><%= escapeHtml4(name.getCanonicalName())%></a></td></tr><%
     }
+
+    %></table><%
   }
 %>
 </div>
