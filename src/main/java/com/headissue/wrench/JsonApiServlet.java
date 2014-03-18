@@ -1,6 +1,5 @@
 package com.headissue.wrench;
 
-import javax.management.MBeanInfo;
 import javax.management.ObjectName;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -17,29 +16,35 @@ import java.util.Set;
 @WebServlet(name="api", urlPatterns = "/api")
 public class JsonApiServlet extends HttpServlet {
 
-
   @Override
-  protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+  protected void doGet(HttpServletRequest _request,
+                       HttpServletResponse _response) throws ServletException, IOException {
     String _encoding = "UTF-8";
-    resp.setCharacterEncoding(_encoding);
-    resp.setContentType("text/javascript");
+    _response.setCharacterEncoding(_encoding);
+    _response.setContentType("text/javascript");
 
-    RestLink _restLink = new RestLink(req.getContextPath());
+    RestLink _restLink = new RestLink(_request.getContextPath());
 
     Wrench _wrench = Wrench.getInstance();
     Set<ObjectName> o;
     try {
-      o = _wrench.queryObjectNames(req.getParameter("q"));
-
-    StringBuilder sb = new StringBuilder("{\"suggestions\":[");
-      Iterator<ObjectName> oit = o.iterator();
+      String _query = _request.getParameter("q");
+      if (_query == null) {
+        _query = ".*";
+      } else {
+        _query = ".*" + _query.toLowerCase() + ".*";
+      }
+      Set<ObjectName> _objectNameList = _wrench.filterObjectNames(_query);
+      StringBuilder sb = new StringBuilder("{\"suggestions\":[");
+      Iterator<ObjectName> oit = _objectNameList.iterator();
       while (oit.hasNext()) {
         ObjectName on = oit.next();
-        MBeanInfo _info = _wrench.getInfo(on);
-        sb.append("{\"name\":\"");
-
         String _name = on.getCanonicalName();
+        if (!_name.toLowerCase().matches(_query)) {
+          continue;
+        }
 
+        sb.append("{\"name\":\"");
         sb.append(_name).append("\", \"url\": \"").append(_restLink.query)
           .append(Util.encodeObjectNameQuery(on, _encoding)).append("\"}");
         if (oit.hasNext()) {
@@ -48,11 +53,13 @@ public class JsonApiServlet extends HttpServlet {
         //sb.append("}");
       }
       sb.append("]}");
-      resp.getWriter().write(sb.toString());
+      _response.getWriter().write(sb.toString());
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
 
 
   }
+
+
 }

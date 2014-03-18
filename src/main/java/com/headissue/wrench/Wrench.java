@@ -1,6 +1,6 @@
 package com.headissue.wrench;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.management.Attribute;
 import javax.management.JMException;
@@ -11,6 +11,8 @@ import javax.management.MBeanServer;
 import javax.management.ObjectName;
 import java.lang.management.ManagementFactory;
 import java.util.Date;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
@@ -163,6 +165,28 @@ public class Wrench {
 
     public MBeanInfo getInfo(ObjectName _objectName) throws Exception {
       return managedBeanServer.getMBeanInfo(_objectName);
+  }
+
+  /**
+   * Finds JMX beans where the names matches the given regex query.
+   * More specifically, it uses the regular expression {@code ".*" + query + ".*"} to find {@link ObjectName}s
+   * @param _query
+   * @return
+   * @throws Exception
+   */
+  public Set<ObjectName> filterObjectNames(String _query) throws Exception {
+    Set<ObjectName> _allObjectNames = getAllObjectNames();
+    Iterator<ObjectName> _nameIterator = _allObjectNames.iterator();
+    LinkedHashSet<ObjectName> _objectNameSet = new LinkedHashSet<>();
+    while (_nameIterator.hasNext()) {
+      ObjectName _objectName = _nameIterator.next();
+      String _name = _objectName.getCanonicalName();
+      if (!_name.toLowerCase().matches(_query)) {
+        continue;
+      }
+      _objectNameSet.add(_objectName);
+    }
+    return _objectNameSet;
   }
 
 }
