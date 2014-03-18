@@ -25,6 +25,8 @@ public class Util {
   public static String removeLeadingSlash(String s) {
     if (s != null) {
       s = s.replaceFirst("^/","");
+    } else {
+      s = "";
     }
     return s;
   }

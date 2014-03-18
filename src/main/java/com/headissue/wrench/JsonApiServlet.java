@@ -1,5 +1,7 @@
 package com.headissue.wrench;
 
+import org.apache.commons.lang3.StringEscapeUtils;
+
 import javax.management.ObjectName;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -13,39 +15,31 @@ import java.util.Set;
 /**
  * @author tobi
  */
-@WebServlet(name="api", urlPatterns = "/api")
+@WebServlet(name="api", urlPatterns = "/api/*")
 public class JsonApiServlet extends HttpServlet {
 
   @Override
   protected void doGet(HttpServletRequest _request,
                        HttpServletResponse _response) throws ServletException, IOException {
+
     String _encoding = "UTF-8";
     _response.setCharacterEncoding(_encoding);
     _response.setContentType("text/javascript");
 
-    RestLink _restLink = new RestLink(_request.getContextPath());
+    RestLink _restLink = new RestLink(_request.getServletContext());
 
     Wrench _wrench = Wrench.getInstance();
-    Set<ObjectName> o;
     try {
-      String _query = _request.getParameter("q");
-      if (_query == null) {
-        _query = ".*";
-      } else {
-        _query = ".*" + _query.toLowerCase() + ".*";
-      }
-      Set<ObjectName> _objectNameList = _wrench.filterObjectNames(_query);
+      String _query = _wrench.pimpQueryRegExp(_request.getParameter("q"));
+
+      Set<ObjectName> _objectNameList = _wrench.queryObjectNamesUsingRegExp(_query);
       StringBuilder sb = new StringBuilder("{\"suggestions\":[");
       Iterator<ObjectName> oit = _objectNameList.iterator();
       while (oit.hasNext()) {
         ObjectName on = oit.next();
         String _name = on.getCanonicalName();
-        if (!_name.toLowerCase().matches(_query)) {
-          continue;
-        }
-
         sb.append("{\"name\":\"");
-        sb.append(_name).append("\", \"url\": \"").append(_restLink.query)
+        sb.append(StringEscapeUtils.escapeJson(_name)).append("\", \"url\": \"").append(_restLink.show)
           .append(Util.encodeObjectNameQuery(on, _encoding)).append("\"}");
         if (oit.hasNext()) {
           sb.append(",");

@@ -1,14 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %><%@
-  page import="com.headissue.wrench.RestLink" %><%@
-  page import="com.headissue.wrench.Wrench" %><%@
   page import="java.net.URLEncoder" %><%@
   page import="java.util.Map" %><%@ include file="frag/decl.jspf"%><%
 
-  Wrench wrench;
-  {
-    wrench = Wrench.getInstance();
-  }
-  RestLink restLink = new RestLink(request.getContextPath());
   if(request.getCharacterEncoding() == null) {
     request.setCharacterEncoding("UTF-8");
   }

@@ -11,13 +11,25 @@
       <servlet-name>api</servlet-name>
       <servlet-class>com.headissue.wrench.JsonApiServlet</servlet-class>
     </servlet>
+    <!--
+    Via convention, the RestLink class takes the first non-jsp mapping for any of the following names
+    As a result, DO NOT CHANGE THESE NAMES, except if you also change them in the RestLink class
+    -->
     <servlet>
-        <servlet-name>query</servlet-name>
-        <jsp-file>/q.jsp</jsp-file>
+        <servlet-name>search</servlet-name>
+        <jsp-file>/search.jsp</jsp-file>
     </servlet>
     <servlet-mapping>
-        <servlet-name>query</servlet-name>
-        <url-pattern>/q/*</url-pattern>
+        <servlet-name>search</servlet-name>
+        <url-pattern>/search/</url-pattern>
+    </servlet-mapping>
+    <servlet>
+      <servlet-name>show</servlet-name>
+      <jsp-file>/show.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+      <servlet-name>show</servlet-name>
+      <url-pattern>/show/*</url-pattern>
     </servlet-mapping>
     <servlet>
         <servlet-name>invoke</servlet-name>

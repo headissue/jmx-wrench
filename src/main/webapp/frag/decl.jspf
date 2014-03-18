@@ -1,6 +1,14 @@
-<%@ page import="java.util.LinkedList" %><%@
-  page import="com.headissue.wrench.Breadcrumb" %><%@
+<%@ page import="com.headissue.wrench.Breadcrumb" %><%@
+  page import="com.headissue.wrench.RestLink" %><%@
+  page import="com.headissue.wrench.Wrench" %><%@
+  page import="java.util.LinkedList" %><%@
   page contentType="text/html;charset=UTF-8" language="java" %><%
+  Wrench wrench = Wrench.getInstance();
+  RestLink restLink = new RestLink(getServletConfig().getServletContext());
+  if(request.getCharacterEncoding() == null) {
+    request.setCharacterEncoding("UTF-8");
+  }
+  String characterEncoding = request.getCharacterEncoding();
   LinkedList<Breadcrumb> _breadcrumbs = new LinkedList<Breadcrumb>();
-  _breadcrumbs.add(new Breadcrumb("Home", request.getServletPath()));
+  _breadcrumbs.add(new Breadcrumb("Home", request.getContextPath()));
 %>

@@ -16,6 +16,7 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.regex.Pattern;
 
 /**
  * Executed operations on a managed bean server.
@@ -174,14 +175,19 @@ public class Wrench {
    * @return
    * @throws Exception
    */
-  public Set<ObjectName> filterObjectNames(String _query) throws Exception {
+  public Set<ObjectName> queryObjectNamesUsingRegExp(String _query) throws Exception {
+    if (_query == null) {
+      return getAllObjectNames();
+    }
+    _query = pimpQueryRegExp(_query);
+    Pattern _pattern = Pattern.compile(_query, Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CHARACTER_CLASS);
     Set<ObjectName> _allObjectNames = getAllObjectNames();
     Iterator<ObjectName> _nameIterator = _allObjectNames.iterator();
     LinkedHashSet<ObjectName> _objectNameSet = new LinkedHashSet<>();
     while (_nameIterator.hasNext()) {
       ObjectName _objectName = _nameIterator.next();
       String _name = _objectName.getCanonicalName();
-      if (!_name.toLowerCase().matches(_query)) {
+      if (!_pattern.matcher(_query).find()) {
         continue;
       }
       _objectNameSet.add(_objectName);
@@ -189,4 +195,21 @@ public class Wrench {
     return _objectNameSet;
   }
 
+  public String pimpQueryRegExp(String _query) {
+    // Build the query regex respecting the ^query and query$ corner cases
+    StringBuilder _queryBuilder = new StringBuilder();
+    if (!_query.startsWith("^")) {
+      _queryBuilder.append(".*");
+    }
+    _queryBuilder.append(_query);
+    if (!_query.endsWith("$")) {
+      _queryBuilder.append(".*");
+    }
+    _query = _queryBuilder.toString();
+    return _query;
+  }
+
+  public boolean isRegistered(ObjectName _objectName) {
+    return managedBeanServer.isRegistered(_objectName);
+  }
 }
