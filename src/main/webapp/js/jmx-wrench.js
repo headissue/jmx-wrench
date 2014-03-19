@@ -1,18 +1,4 @@
 var Wrench = (function ($) {
-  // Object "constructor" for public functions
-  return {
-    init: function(apiContext) {
-      // at the point of the execution of this script, the document is not fully loaded yet.
-      Templates = {
-        okayMessage: Handlebars.compile($('#okay-message').html()),
-        errorMessage: Handlebars.compile($('#error-message').html()),
-        suggestionT:  Handlebars.compile('<p><a href="{{url}}">{{{wrappableName name}}}</a></p>')
-      }
-      //Message.add(Templates.okayMessage, {message:"test"});
-      bindSetProperty();
-      initTypeahead(apiContext);
-    }
-  }
 
 
   var Templates = undefined;
@@ -31,7 +17,7 @@ var Wrench = (function ($) {
     var engine = new Bloodhound({
       name: 'search',
       remote:  {
-        url:  servletPrefix + "?q=%QUERY",
+        url:  servletPrefix + "search?q=%QUERY",
         filter: function (parsedResponse) {
           // unwrap
           return parsedResponse.suggestions;
@@ -65,9 +51,9 @@ var Wrench = (function ($) {
   }
 
   function bindSetProperty () {
-// Ajax submissions for setting properities
-//callback handler for form submit
-    $("form.setpropertyform").submit(function(e)
+    // Ajax submissions for setting properities and invoking methods
+    // The structure of the responses is intentionally the same
+    $("form.setpropertyform,form.setattributeform").submit(function(e)
     {
       var postData = $(this).serializeArray();
       var formURL = $(this).attr("action");
@@ -80,5 +66,23 @@ var Wrench = (function ($) {
     });
   }
 
+  function maybeCompile(elem) {
+    var html = elem.html();
+    return html ? Handlebars.compile(html) : null;
+  }
 
+  // Object "constructor" for public functions. Must be at the bottom
+  return {
+    init: function(apiContext) {
+      // at the point of the execution of this script, the document is not fully loaded yet.
+      Templates = {
+        okayMessage: maybeCompile($('#okay-message')),
+        errorMessage: maybeCompile($('#error-message')),
+        suggestionT:  Handlebars.compile('<p><a href="{{url}}">{{{wrappableName name}}}</a></p>')
+      }
+      //Message.add(Templates.okayMessage, {message:"test"});
+      bindSetProperty();
+      initTypeahead(apiContext);
+    }
+  };
 })(jQuery);
