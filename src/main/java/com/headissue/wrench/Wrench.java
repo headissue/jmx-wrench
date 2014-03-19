@@ -75,7 +75,7 @@ public class Wrench {
     try {
       _name = new ObjectName(_params.get(QUERY)[0]);
       Object _result = invoke(_name,  _operation, _operationParameters,  _signature);
-      return "Execution returned: " + _result;
+      return _result;
     } catch (JMException e) {
       return  "<span class=\"error\">could not execute invoke<span>" + e;
     }
@@ -84,24 +84,24 @@ public class Wrench {
   /**
    * Returns all Beans registered in the MBeanServer. When an objects classPath is provided, the result is
    * filtered.
-   * @param q
+   * @param _query See {@link javax.management.ObjectName} for valid queries
    * @return Set of registered Beans
    * @throws Exception
    */
-  public Set<ObjectName> queryObjectNames(String q) throws Exception{
-    ObjectName _query = null;
-    if (StringUtils.isNotBlank(q)) {
-      if (q.contains(":")) {
-        _query =new ObjectName(q + "*");
+  public Set<ObjectName> findObjectNames(String _query) throws Exception{
+    ObjectName _queryObjectName = null;
+    if (StringUtils.isNotBlank(_query)) {
+      if (_query.contains(":")) {
+        _queryObjectName =new ObjectName(_query + "*");
       } else {
-        _query = new ObjectName(q+"*:*");
+        _queryObjectName = new ObjectName(_query+"*:*");
       }
     }
-    return new TreeSet<>(managedBeanServer.queryNames(_query, null));
+    return new TreeSet<>(managedBeanServer.queryNames(_queryObjectName, null));
   }
 
-  public Set<ObjectName> getAllObjectNames() throws Exception{
-    return queryObjectNames("");
+  public Set<ObjectName> findAllObjectNames() throws Exception{
+    return findObjectNames("");
   }
 
 
@@ -177,17 +177,17 @@ public class Wrench {
    */
   public Set<ObjectName> queryObjectNamesUsingRegExp(String _query) throws Exception {
     if (_query == null) {
-      return getAllObjectNames();
+      return findAllObjectNames();
     }
     _query = pimpQueryRegExp(_query);
     Pattern _pattern = Pattern.compile(_query, Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CHARACTER_CLASS);
-    Set<ObjectName> _allObjectNames = getAllObjectNames();
+    Set<ObjectName> _allObjectNames = findAllObjectNames();
     Iterator<ObjectName> _nameIterator = _allObjectNames.iterator();
     LinkedHashSet<ObjectName> _objectNameSet = new LinkedHashSet<>();
     while (_nameIterator.hasNext()) {
       ObjectName _objectName = _nameIterator.next();
       String _name = _objectName.getCanonicalName();
-      if (!_pattern.matcher(_query).find()) {
+      if (!_pattern.matcher(_name).find()) {
         continue;
       }
       _objectNameSet.add(_objectName);

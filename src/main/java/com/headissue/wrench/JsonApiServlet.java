@@ -13,10 +13,14 @@ import java.util.Iterator;
 import java.util.Set;
 
 /**
+ * A servlet which returns JSON. It should be used for more complex tasks, like searching.
+ * For simple things like method invocation, a JSP should be preferred.
  * @author tobi
  */
 @WebServlet(name="api", urlPatterns = "/api/*")
 public class JsonApiServlet extends HttpServlet {
+  public static String SEARCH = "/search";
+  private final Wrench wrench = Wrench.getInstance();
 
   @Override
   protected void doGet(HttpServletRequest _request,
@@ -26,13 +30,22 @@ public class JsonApiServlet extends HttpServlet {
     _response.setCharacterEncoding(_encoding);
     _response.setContentType("text/javascript");
 
+    //_response.setContentType("application/json");
     RestLink _restLink = new RestLink(_request.getServletContext());
+    String _pathInfo = _request.getPathInfo();
+    if (_pathInfo.startsWith(SEARCH)) {
+      search(_request, _response, _encoding, _restLink);
+    } else {
+      _response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+    }
 
-    Wrench _wrench = Wrench.getInstance();
+  }
+
+  private void search(HttpServletRequest _request, HttpServletResponse _response, String _encoding, RestLink _restLink) {
     try {
-      String _query = _wrench.pimpQueryRegExp(_request.getParameter("q"));
+      String _query = _request.getParameter("q");
 
-      Set<ObjectName> _objectNameList = _wrench.queryObjectNamesUsingRegExp(_query);
+      Set<ObjectName> _objectNameList = wrench.queryObjectNamesUsingRegExp(_query);
       StringBuilder sb = new StringBuilder("{\"suggestions\":[");
       Iterator<ObjectName> oit = _objectNameList.iterator();
       while (oit.hasNext()) {
@@ -51,9 +64,6 @@ public class JsonApiServlet extends HttpServlet {
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
-
-
   }
-
 
 }

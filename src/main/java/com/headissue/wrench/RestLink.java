@@ -20,6 +20,7 @@ public class RestLink {
   public final String invoke;
   public final String show;
   public final String api;
+  public final String searchApi;
 
   public RestLink(ServletContext _context) {
     String _contextPath = _context.getContextPath();
@@ -29,6 +30,7 @@ public class RestLink {
     set = _contextPath + getRestContextByName(nameMap, "set");
     invoke = _contextPath + getRestContextByName(nameMap, "invoke");
     api = _contextPath + getRestContextByName(nameMap, "api");
+    searchApi = api + JsonApiServlet.SEARCH;
   }
 
 
