@@ -17,12 +17,14 @@
   MBeanAttributeInfo[] mBeanAttributeInfos = info.getAttributes();
 
   %><%@include file="frag/head.jspf"%><script id="okay-message" type="text/x-handlebars-template">
-  <div class="alert alert-success fade-in">
+  <div class="alert alert-success fade in">
+    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
     <strong>Success!</strong> {{message}}
   </div>
 </script>
 <script id="error-message" type="text/x-handlebars-template">
-  <div class="alert alert-danger fade-in">
+  <div class="alert alert-danger fade in">
+    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
     <strong>Error:</strong> {{message}}
   </div>
 </script><%
@@ -127,7 +129,8 @@
           <td><%=mBeanOperationInfo.getReturnType()%></td>
           <td><code><%=mBeanOperationInfo.getName()%><%=signatureString.replace(",",",&#8203;").replace("(","(&#8203;")%></code</td>
           <td>
-            <form role="form" action="<%=restLink.invoke%>" method="GET" class="form-horizontal">
+            <form role="form" class="setattributeform" action="<%=restLink.invoke%>" method="GET"
+                  class="form-horizontal">
                 <div class="input-group"><%
 
                   for (MBeanParameterInfo operationParameter : operationParameters) {
