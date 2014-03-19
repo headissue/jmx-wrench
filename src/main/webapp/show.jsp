@@ -80,11 +80,14 @@
 
         if (mBeanAttributeInfo.isWritable()) {
       %>
-          <td>
-            <form class="setpropertyform"  method="GET" role="form" class="form-inline" action="<%=restLink.set%><%=URLEncoder.encode(objectName.getCanonicalName(),characterEncoding)%>">
+          <td><%-- Tomcat does not allow forward (/) or backslashes (\), so we need to send the object name as parameter--%>
+            <form class="setpropertyform"  method="POST" role="form" class="form-inline" action="<%=restLink.set%>">
+              <input type="hidden" name="<%=Wrench.ATTRIBUTE%>" value='<%=URLEncoder.encode(mBeanAttributeInfo.getName(), characterEncoding)%>'/>
+              <input type="hidden" name="class" value="<%=URLEncoder.encode(objectName.getCanonicalName(),characterEncoding)%>"/>
               <div class="input-group">
+
                 <input type="text" class="form-control" name="<%=Wrench.VALUE%>"/>
-                <input type="hidden" name="<%=Wrench.ATTRIBUTE%>" value='<%=URLEncoder.encode(mBeanAttributeInfo.getName(), characterEncoding)%>'/>
+
                 <div class="input-group-btn">
                   <input class="btn btn-primary" type="submit" value="set"/>
                 </div>

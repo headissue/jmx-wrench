@@ -17,10 +17,8 @@ var Wrench = (function ($) {
 
   var Templates = undefined;
 
-  var Message = {
-    add: function(compiledTemplate, data) {
-      $('#messages').append(compiledTemplate(data))
-    }
+  function addMessage(compiledTemplate, data) {
+    $('#messages').append(compiledTemplate(data));
   }
 
   function initTypeahead(servletPrefix) {
@@ -73,22 +71,12 @@ var Wrench = (function ($) {
     {
       var postData = $(this).serializeArray();
       var formURL = $(this).attr("action");
-      $.ajax(
-        {
-          url : formURL,
-          type: "GET",
-          data : postData,
-          success: function(data, textStatus, jqXHR)
-          {
-            Message.add(Templates.okayMessage, data);
-          },
-          error: function(jqXHR, textStatus, errorThrown)
-          {
-            Message.add(Templates.errorMessage, data);
-          }
-        });
+      $.post(formURL,postData, function(data) {
+        addMessage(Templates.okayMessage, data);
+      }).fail(function(jqXHR) {
+        addMessage(Templates.errorMessage, $.parseJSON(jqXHR.responseText));
+      });
       e.preventDefault(); //STOP default action
-      e.unbind(); //unbind. to stop multiple form submit.
     });
   }
 
