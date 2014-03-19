@@ -31,7 +31,7 @@
     objectNameSet.add(new ObjectName(fullyQualifiedObjectName));
   }
    else   {
-    objectNameSet = wrench.getAllObjectNames();
+    objectNameSet = wrench.findAllObjectNames();
   }
 
 %><%@include file="frag/head.jspf"%>
