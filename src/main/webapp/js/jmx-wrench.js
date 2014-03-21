@@ -8,7 +8,6 @@ var Wrench = (function ($) {
   }
 
   function initTypeahead(servletPrefix) {
-    console.log("init typeahead:" + servletPrefix);
     Handlebars.registerHelper('wrappableName', function(name) {
       // insert a zero-width (=invisible) space after each colon
       // so the attributes get wrapped in the typeahead
@@ -25,12 +24,10 @@ var Wrench = (function ($) {
       },
       datumTokenizer: function(d) {
         var res = Bloodhound.tokenizers.nonword(d);
-        console.log(res);
         return res;
       },
       queryTokenizer: Bloodhound.tokenizers.whitespace
     });
-    console.log($('#okay-message').html());
     engine.initialize();
 
     $('#search').typeahead({
