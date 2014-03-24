@@ -1,5 +1,8 @@
 <%@ page import="com.headissue.wrench.Breadcrumb"
-%><!DOCTYPE html>
+%>
+<%@ page import="java.util.Iterator" %>
+<%@ page import="java.util.List" %>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="utf-8">
@@ -20,12 +23,12 @@
     <script src="${pageContext.request.contextPath}/vendor/html5shiv.min.js"></script>
     <script src="${pageContext.request.contextPath}/vendor/respond.min.js"></script>
     <![endif]-->
-  <script src="${pageContext.request.contextPath}/vendor/jquery/jquery-1.11.0.min.js"></script>
-  <script src="${pageContext.request.contextPath}/vendor/bootstrap-3.1.1-dist/js/bootstrap.min.js"></script>
-  <script src="${pageContext.request.contextPath}/vendor/handlebars-v1.3.0.js"></script>
-  <script type="text/javascript"
+    <script src="${pageContext.request.contextPath}/vendor/jquery/jquery-1.11.0.min.js"></script>
+    <script src="${pageContext.request.contextPath}/vendor/bootstrap-3.1.1-dist/js/bootstrap.min.js"></script>
+    <script src="${pageContext.request.contextPath}/vendor/handlebars-v1.3.0.js"></script>
+    <script type="text/javascript"
           src="${pageContext.request.contextPath}/vendor/typeahead.js/typeahead.bundle.min.js"></script>
-<script type="text/javascript" src="${pageContext.request.contextPath}/js/jmx-wrench.js"></script>
+    <script type="text/javascript" src="${pageContext.request.contextPath}/js/jmx-wrench.js"></script>
     <script type="text/javascript">
       var typeaheadApiPrefix = '<%= restLink.api%>';
       $(window).load( function() {
@@ -35,44 +38,56 @@
   </head>
 
   <body>
-
-
-      <div class="container">
-        <div class="navbar navbar-default" role="navigation">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="#">headissue JMX wrench</a>
-        </div>
-        <div class="collapse navbar-collapse">
-          <ul class="nav navbar-nav">
-            <li class="active"><a href="${pageContext.request.contextPath}">Home</a></li>
-          </ul>
-          <div class="row">
-            <div class="col-md-4 col-sm-6">
-            <form id="navSearch" class="navbar-form navbar-left typeahead-bootstrap-fix" role="search"
-                  action="<%=restLink.query%>">
-              <div class="form-group">
-              <div class="input-group dropdown">
-                 <span class="input-group-btn">
-                  <button class="btn btn-default" type="submit"><span class="glyphicon glyphicon-search"></span></button>
-                </span>
-                <input type="text" class="form-control" placeholder="Search" name="query" id="search">
-              </div>
-                </div>
-            </form>
-              </div>
-            </div>
-        </div><!--/.nav-collapse -->
+    <div class="container">
+      <div class="navbar navbar-default" role="navigation">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="#">headissue JMX wrench</a>
       </div>
+      <div class="collapse navbar-collapse">
+        <ul class="nav navbar-nav">
+          <li class="active"><a href="${pageContext.request.contextPath}">Home</a></li>
+        </ul>
+        <div class="row">
+          <div class="col-md-4 col-sm-6">
+          <form id="navSearch" class="navbar-form navbar-left typeahead-bootstrap-fix" role="search"
+                action="<%=restLink.query%>">
+            <div class="form-group">
+            <div class="input-group dropdown">
+               <span class="input-group-btn">
+                <button class="btn btn-default" type="submit"><span class="glyphicon glyphicon-search"></span></button>
+              </span>
+              <input type="text" class="form-control" placeholder="Search" name="query" id="search">
+            </div>
+              </div>
+          </form>
+            </div>
+          </div>
+      </div><!--/.nav-collapse -->
+    </div>
 
-      <ol class="breadcrumb">
-        <% for (Breadcrumb _entry : _breadcrumbs) {
-        %><li><a class="<%= _entry == _breadcrumbs.getLast() ? "active" : "" %>"
-                 href="<%= _entry.getUrl()%>"><%=_entry.getName()%></a></li>
-        <%}%>
-</ol>
+    <ol class="breadcrumb">
+      <li>
+        <a href="/">Home</a>
+      </li>
+      <% List<Breadcrumb> _breadcrumbs = new LinkedList<Breadcrumb>();
+        // root
+        _breadcrumbs.addAll(Breadcrumb.buildCrumbs(fullyQualifiedObjectName, Breadcrumb.FORMAT_FQON));
+        String url = "";
+
+        for (Iterator iterator = _breadcrumbs.iterator(); iterator.hasNext(); ) {
+          Breadcrumb next = (Breadcrumb) iterator.next();
+            url +=  next.getName() + ".";
+%>
+      <li>
+        <a href="<%=restLink.query%>?query=<%=url%>"><%=next.getName()%></a>
+      </li><%
+
+        }
+%>
+    </ol>

@@ -9,6 +9,5 @@
     request.setCharacterEncoding("UTF-8");
   }
   String characterEncoding = request.getCharacterEncoding();
-  LinkedList<Breadcrumb> _breadcrumbs = new LinkedList<Breadcrumb>();
-  _breadcrumbs.add(new Breadcrumb("Home", request.getContextPath()));
+  String fullyQualifiedObjectName = "";
 %>

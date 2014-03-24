@@ -27,7 +27,7 @@
     // encoded ObjectName
     String objectClassPath = path;
     Map<String, String[]> parameters = (Map<String, String[]>) request.getParameterMap();
-    String fullyQualifiedObjectName = Util.decodeObjectNameQuery(objectClassPath, parameters, characterEncoding);
+    fullyQualifiedObjectName = Util.decodeObjectNameQuery(objectClassPath, parameters, characterEncoding);
     objectNameSet.add(new ObjectName(fullyQualifiedObjectName));
   }
    else   {

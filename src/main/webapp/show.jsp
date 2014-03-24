@@ -8,7 +8,7 @@
   String error  = null;
   // encoded ObjectName
   Map<String, String[]> parameters = (Map<String, String[]>) request.getParameterMap();
-  String fullyQualifiedObjectName = Util.decodeObjectNameQuery(path, parameters, characterEncoding);
+  fullyQualifiedObjectName = Util.decodeObjectNameQuery(path, parameters, characterEncoding);
   ObjectName objectName = new ObjectName(fullyQualifiedObjectName);
   if (!wrench.isRegistered(objectName)) {
     error = "Unknown object name: " + objectName;
@@ -50,7 +50,7 @@
     <%
       if (info.getDescription() != null) {
 
-      %><p><strong>Description: </strong> <%=info.getDescription()%></strong></p><%
+      %><p><strong>Description: <%=info.getDescription()%></strong></p><%
 
     }
     %>
