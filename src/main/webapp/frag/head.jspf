@@ -73,7 +73,7 @@
 
     <ol class="breadcrumb">
       <li>
-        <a href="/">Home</a>
+        <a href="<%=restLink.query%>?query=">Home</a>
       </li>
       <% List<Breadcrumb> _breadcrumbs = new LinkedList<Breadcrumb>();
         // root
