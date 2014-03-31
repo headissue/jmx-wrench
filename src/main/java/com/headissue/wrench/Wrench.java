@@ -10,6 +10,7 @@ import javax.management.MBeanParameterInfo;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
 import java.lang.management.ManagementFactory;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -20,7 +21,7 @@ import java.util.regex.Pattern;
 
 /**
  * Executed operations on a managed bean server.
- * 
+ *
  * @author wormi
  * @see <a href="https://to.headissue.net/radar/browse/MTP-4990">MTP-4990</a>
  */
@@ -104,6 +105,23 @@ public class Wrench {
     return findObjectNames("");
   }
 
+  /**
+   * Gets the type of the attribute and tries to
+   * @param _objectName
+   * @param _attributeInfo
+   * @return
+   * @throws Exception
+   */
+  public Class<?> getAttributeType(ObjectName _objectName, MBeanAttributeInfo _attributeInfo) throws Exception {
+    Object _attribute = managedBeanServer.getAttribute(_objectName, _attributeInfo.getName());
+    if (_attribute == null) {
+      return Class.forName(_attributeInfo.getType());
+    }
+    if (_attribute instanceof Object[]) {
+      return ((Object[]) _attribute).getClass();
+    }
+    return _attribute.getClass();
+  }
 
   /**
    * Reads a specific value from a Bean
@@ -116,6 +134,9 @@ public class Wrench {
     Object _attribute = managedBeanServer.getAttribute(_objectName, _attributeName);
     if (_attribute == null) {
       return "null";
+    }
+    if (_attribute instanceof Object[]) {
+      return Arrays.toString((Object[]) _attribute);
     }
     return _attribute.toString();
   }
@@ -164,8 +185,8 @@ public class Wrench {
     return sb.toString();
   }
 
-    public MBeanInfo getInfo(ObjectName _objectName) throws Exception {
-      return managedBeanServer.getMBeanInfo(_objectName);
+  public MBeanInfo getInfo(ObjectName _objectName) throws Exception {
+    return managedBeanServer.getMBeanInfo(_objectName);
   }
 
   /**

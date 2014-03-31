@@ -79,6 +79,16 @@ var Wrench = (function ($) {
       }
       //Message.add(Templates.okayMessage, {message:"test"});
       bindSetProperty();
+      // Tooltip-plugin
+      $("*[data-toggle='tooltip']").tooltip();
+      $(".collapse").on('show.bs.collapse', function (){
+        var a = $(this).next("a");
+        a.html("(Less&#x2026;)");
+      });
+      $(".collapse").on('hidden.bs.collapse', function (){
+        var a = $(this).next("a");
+        a.html("(More&#x2026;)");
+      });
       initTypeahead(apiContext);
     }
   };

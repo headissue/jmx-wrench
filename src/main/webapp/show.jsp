@@ -2,7 +2,8 @@
   import="javax.management.MBeanInfo" %><%@ page import="javax.management.MBeanOperationInfo" %><%@ page
   import="javax.management.MBeanParameterInfo" %><%@ page import="javax.management.ObjectName" %><%@ page
   import="java.net.URLDecoder" %><%@ page import="java.net.URLEncoder" %><%@ page
-  import="java.util.Map" %><%@ page import="static org.apache.commons.lang3.StringEscapeUtils.escapeHtml4" %><%@include file="frag/decl.jspf"%><%
+  import="java.util.Map" %><%@ page import="static org.apache.commons.lang3.StringEscapeUtils.escapeHtml4" %><%@
+  include file="frag/decl.jspf"%><%
 
   String path = URLDecoder.decode(Util.removeLeadingSlash(request.getPathInfo()), "UTF-8");
   String error  = null;
@@ -16,7 +17,7 @@
   MBeanInfo info = wrench.getInfo(objectName);
   MBeanAttributeInfo[] mBeanAttributeInfos = info.getAttributes();
 
-  %><%@include file="frag/head.jspf"%><script id="okay-message" type="text/x-handlebars-template">
+%><%@include file="frag/head.jspf"%><script id="okay-message" type="text/x-handlebars-template">
   <div class="alert alert-success fade in">
     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
     <strong>Success!</strong> {{message}}
@@ -50,10 +51,10 @@
     <%
       if (info.getDescription() != null) {
 
-      %><p><strong>Description: <%=info.getDescription()%></strong></p><%
+    %><p><strong>Description: <%=info.getDescription()%></strong></p><%
 
     }
-    %>
+  %>
 
     <h3>Attributes</h3>
     <table class="table table-responsive table-striped" class="attributeTable">
@@ -63,22 +64,42 @@
       <tbody>
       <%
 
-
+        int moreCount = 0;
         for (MBeanAttributeInfo mBeanAttributeInfo : mBeanAttributeInfos) {
       %>
       <tr>
-        <td><%= mBeanAttributeInfo.getType() %></td>
-        <td><code class="whitespace"><%=mBeanAttributeInfo.getName()%></code></td><%
+        <td><%
+          try {
 
-        String value;
-        try {
-          value = wrench.getAttributeValue(objectName, mBeanAttributeInfo.getName());
+            Class<?> _type = wrench.getAttributeType(objectName, mBeanAttributeInfo); %>
+          <span data-toggle="tooltip" data-placement="left"
+                title="<%=_type.getCanonicalName()%>"><%=_type.getSimpleName()%></span><%
+          } catch(Exception e) {
+          %><div class="alert alert-danger">Cannot retrieve type</div><%
+            }
+          %>
+        </td>
+        <td><code class="whitespace"><%=mBeanAttributeInfo.getName()%></code></td>
+        <td class="value"><%
+
+
+          try {
+            int _maxLength = 300;
+            String value = wrench.getAttributeValue(objectName, mBeanAttributeInfo.getName());
+        %><%=Util.breakAtAsciiNonword(value.substring(0,Math.min(value.length(), _maxLength)))%><%
+          if (value.length() >= _maxLength) {
+            moreCount++;
+            String id = "value" + moreCount;
+        %><span class="collapse" data-position="bottom" data-parent="td"
+                id="<%=id%>"><%=Util.breakAtAsciiNonword(value.substring(_maxLength))%><p></p></span><%--
+          --%><a data-toggle="collapse" href="#<%=id%>" >(More&#x2026;)</a><%
+          }
+        %><%
         } catch (Exception e) {
-          value = "<p><span class=\"error\">inaccessible </span></p>"+
-            "<p>"+e.getLocalizedMessage()+"</p>";
-        }
-      %><%-- Zero width space hack --%>
-        <td class="value"><%=value.toString().replace(",",",&#8203;")%></td><%
+        %><div class="alert alert-danger">inaccessible value: <p> <%=e.getLocalizedMessage()%></p></div><%
+          }
+        %>
+        </td><%
 
         if (mBeanAttributeInfo.isWritable()) {
       %>
@@ -98,7 +119,7 @@
           </td><%
 
       } else {
-      %><td></td><%
+      %><td>(read-only)</td><%
         }
       %>
       </tr><%
@@ -127,7 +148,7 @@
       %>
         <tr>
           <td><%=mBeanOperationInfo.getReturnType()%></td>
-          <td><code><%=mBeanOperationInfo.getName()%><%=signatureString.replace(",",",&#8203;").replace("(","(&#8203;")%></code</td>
+          <td><code><%=mBeanOperationInfo.getName()%><%=Util.breakAtChars(signatureString,',','(')%></code</td>
           <td>
             <form role="form" class="setattributeform" action="<%=restLink.invoke%>" method="GET"
                   class="form-horizontal">
