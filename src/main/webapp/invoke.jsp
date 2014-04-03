@@ -1,30 +1,39 @@
-<%@
-  page import="com.headissue.wrench.RestLink" %><%@
-  page import="com.headissue.wrench.Wrench" %><%@
-  page import="java.util.Map" %><%@
-  page import="java.net.URLEncoder" %>
-<%
+<%@ page contentType="text/html;charset=UTF-8" language="java" %><%@
+  page import="org.apache.commons.lang3.StringEscapeUtils" %><%@
+  page import="java.util.Arrays" %><%@ page import="java.util.Map" %><%@ page import="java.util.Objects" %><%@ include file="frag/decl.jspf"%><%
 
-  Wrench wrench;
-  {
-    wrench = Wrench.getInstance();
-  }
-  RestLink restLink = new RestLink(request.getContextPath());
   if(request.getCharacterEncoding() == null) {
     request.setCharacterEncoding("UTF-8");
   }
 
+  response.setContentType("application/json");
+  // Never cache
+  response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate, max-age=0");
 
-  String returnValue = "Did not invoke, nothing to return";
+  String message;
+  String result = "ok";
+
   Map<String, String[]> parameters = request.getParameterMap();
   if ( parameters != null) {
     try {
-      returnValue = (String) wrench.invoke(parameters);
+      String returnValue;
+      Object o = wrench.invoke(parameters);
+      if (o instanceof Object[]) {
+        returnValue = Arrays.toString((Object[]) o);
+      } else {
+        returnValue = o.toString();
+      }
+      String _operation = parameters.get(Wrench.OPERATION)[0];
+      message = "Operation " + _operation + " invoked successfully. The return value was: " + returnValue;
     } catch (Exception e) {
-      returnValue = "<p><span class=\"error\">invoke failed</span></p>"+
-        "<p>"+e.getLocalizedMessage()+"</p>";
+      result = "error";
+      response.setStatus(503);
+      message = e.fillInStackTrace().toString();
     }
+  } else {
+    result = "error";
+    message = "No parameters specified";
   }
+
+  %>{"result":"<%= result%>", "message": "<%= StringEscapeUtils.escapeJson(message) %>" }<%
 %>
-<h2><%=returnValue%></h2>
-<a href='<%=restLink.query%><%=URLEncoder.encode(parameters.get(Wrench.QUERY)[0], request.getCharacterEncoding())%>'>back to bean</a>
