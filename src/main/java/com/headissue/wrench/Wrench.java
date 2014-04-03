@@ -55,24 +55,21 @@ public class Wrench {
    * @return
    * @throws JMException
    */
-  public Object invoke(ObjectName _name, String _operation, String[] _parameters, String[] _signature)
-    throws JMException { // "throws Exception" is never a good idea
+  public Object invoke(ObjectName _name, String _operation, String[] _parameters, String[] _signature) throws JMException {
     return managedBeanServer.invoke(_name, _operation, _parameters, _signature);
   }
 
   public Object invoke(Map<String, String[]> _params) {
 
-    ObjectName _name;
-
-
     String _operation = _params.get(OPERATION)[0];
     String[] _operationParameters = _params.get(PARAMETER);
 
     String[] _signature = null;
-
     if (StringUtils.isNotBlank(_params.get(SIGNATURE)[0])) {
       _signature = _params.get(SIGNATURE)[0].split(SIGNATURE_DELIMITER);
     }
+
+    ObjectName _name;
     try {
       _name = new ObjectName(_params.get(QUERY)[0]);
       Object _result = invoke(_name,  _operation, _operationParameters,  _signature);
@@ -106,7 +103,6 @@ public class Wrench {
   }
 
   /**
-   * Gets the type of the attribute and tries to
    * @param _objectName
    * @param _attributeInfo
    * @return
@@ -217,7 +213,6 @@ public class Wrench {
   }
 
   public String pimpQueryRegExp(String _query) {
-    // Build the query regex respecting the ^query and query$ corner cases
     StringBuilder _queryBuilder = new StringBuilder();
     if (!_query.startsWith("^")) {
       _queryBuilder.append(".*");

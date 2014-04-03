@@ -23,14 +23,11 @@ public class JsonApiServlet extends HttpServlet {
   private final Wrench wrench = Wrench.getInstance();
 
   @Override
-  protected void doGet(HttpServletRequest _request,
-                       HttpServletResponse _response) throws ServletException, IOException {
+  protected void doGet(HttpServletRequest _request, HttpServletResponse _response) throws ServletException, IOException {
 
     String _encoding = "UTF-8";
     _response.setCharacterEncoding(_encoding);
     _response.setContentType("text/javascript");
-
-    //_response.setContentType("application/json");
     RestLink _restLink = new RestLink(_request.getServletContext());
     String _pathInfo = _request.getPathInfo();
     if (_pathInfo.startsWith(SEARCH)) {

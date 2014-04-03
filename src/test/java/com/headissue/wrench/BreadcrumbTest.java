@@ -6,9 +6,6 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
-/**
- * Created by wormi on 24.03.14.
- */
 public class BreadcrumbTest {
   @Test
   public void testBuildCrumbs() throws Exception {

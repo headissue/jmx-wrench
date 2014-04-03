@@ -10,11 +10,6 @@ import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertTrue;
 
-
- /**
- * @author wormi
- * @see <a href="https://to.headissue.net/radar/browse/MTP-4990">MTP-4990</a>
- */
 public class WrenchTest {
 
   Wrench wrench = Wrench.getInstance();
@@ -24,18 +19,6 @@ public class WrenchTest {
     assertNotNull("getInstance always returns a new Wrench instance", Wrench.getInstance());
   }
 
-  //  FIXME
-  /*
-  @Test
-  public void testInvokeWithMap() throws Exception {
-
-  }
-
-  @Test
-  public void testInvoke() throws Exception {
-
-  }
- */
   @Test
   public void testQueryObjectNames() throws Exception {
     Set<ObjectName> _filtered = wrench.findObjectNames("java.la");
@@ -63,39 +46,7 @@ public class WrenchTest {
   public void testGetAllObjectNames() throws Exception{
     Set<ObjectName> _objectNames = wrench.findAllObjectNames();
     assertTrue("At least one object is returned", !_objectNames.isEmpty());
-    /*
-    // Do not use System.out.println()!
-    for (ObjectName _next : _objectNames) {
-      System.out.println(_next);
-    } */
     assertTrue("The object java.lang.Memory is contained in the result",
       _objectNames.contains(new ObjectName("java.lang:type=Memory")));
   }
-
- //   FIXME
- /*
-  @Test
-  public void testGetInfo() throws Exception {
-
-  }
-
-  @Test
-  public void testGetAttributeValue() throws Exception {
-
-  }
-
-  @Test
-  public void testSetBeanAttributeWithMap() throws Exception {
-
-  }
-
-  @Test
-  public void testSetBeanAttribute() throws Exception {
-
-  }
-
-  @Test
-  public void testGetSignatureString() throws Exception {
-
-  }  */
 }

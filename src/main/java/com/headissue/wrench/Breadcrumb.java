@@ -6,9 +6,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-/**
- * @author tobi
- */
 public class Breadcrumb {
 
   public static final Breadcrumb ROOT = new Breadcrumb("ROOT", null);

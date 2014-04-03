@@ -13,12 +13,11 @@ import static java.net.URLEncoder.encode;
  * Provides utility functions for URL manipulation and processing
  *
  * @author wormi
- * @see <a href="https://to.headissue.net/radar/browse/MTP-4990">MTP-4990</a>
  */
 public class Util {
 
   /**
-   * Note: Returns null if null is given as parameter.
+   * Note: Returns empty string if null is given as parameter.
    * @param s
    * @return
    */
