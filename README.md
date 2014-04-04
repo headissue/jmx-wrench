@@ -2,7 +2,7 @@
 
 A remote management tool for Managed Beans. Developed with the intention to be small and easy to use. Build the war, deploy it onto a tomcat server and get access to all MBeans in the JVM.
 
-![ScreenShot](https://raw.githubusercontent.com/headissue/jmx-wrench/master/detailScreen.png)
+![ScreenShot](detailScreen.png)
 
 ## features
 
