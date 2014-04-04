@@ -1,4 +1,4 @@
-# jmw-wrench
+# jmx-wrench
 
 A remote management tool for Managed Beans. Developed with the intention to be small and easy to use. Build the war, deploy it onto a tomcat server and get access to all MBeans in the JVM.
 
