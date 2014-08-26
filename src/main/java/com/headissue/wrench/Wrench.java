@@ -23,7 +23,6 @@ import java.util.regex.Pattern;
  * Executed operations on a managed bean server.
  *
  * @author wormi
- * @see <a href="https://to.headissue.net/radar/browse/MTP-4990">MTP-4990</a>
  */
 public class Wrench {
 
