@@ -18,7 +18,9 @@
     try {
       String returnValue;
       Object o = wrench.invoke(parameters);
-      if (o instanceof Object[]) {
+      if (o == null) {
+        returnValue="void";
+      } else if (o instanceof Object[]) {
         returnValue = Arrays.toString((Object[]) o);
       } else {
         returnValue = o.toString();
@@ -26,6 +28,7 @@
       String _operation = parameters.get(Wrench.OPERATION)[0];
       message = "Operation " + _operation + " invoked successfully. The return value was: " + returnValue;
     } catch (Exception e) {
+      e.printStackTrace();
       result = "error";
       response.setStatus(503);
       message = e.fillInStackTrace().toString();
