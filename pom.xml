@@ -5,7 +5,7 @@
 
     <groupId>com.headissue</groupId>
     <artifactId>headissue-wrench</artifactId>
-    <version>0.1</version>
+    <version>0.2-SNAPSHOT</version>
   <dependencies>
     <dependency>
       <groupId>org.apache.commons</groupId>
