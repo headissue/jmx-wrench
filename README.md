@@ -1,6 +1,6 @@
 # jmx-wrench
 
-A remote management tool for Managed Beans. Developed with the intention to be small and easy to use. Use Maven with "mvn package" to build the ".war", deploy it onto an application server and get access to all MBeans in the JVM. The basic layout is as followed:
+JMX-Wrench is a remote management tool to efficiently access and configure your Managed Beans. It was developed to be small and easy to install and easy to use.
 
 ![ScreenShot](detailScreen.png)
 
@@ -25,7 +25,8 @@ You can access it with: http://<application-server>/jmx-wrench
 
 ### Note
 
-If you just want a quick local setup, remove the security constraint from the web.xml!
+To prevent unwanted access, there are several security constraints installed.
+If your are only interested in a quick local setup, just remove the security constraints from the web.xml under /src/main/webapp/WEB-INF or comment them out.
 
 ## Features
 
@@ -54,7 +55,7 @@ For the objectname format see [the java doc](http://docs.oracle.com/javase/7/doc
 ## Contribution:
 
 * Fork it
-* Create your feature branch (git checkout -b my-new-feature)
-* Commit your changes (git commit -am 'Add some feature')
-* Push to the branch (git push origin my-new-feature)
+* Create your feature branch (`git checkout -b my-new-feature`)
+* Commit your changes (`git commit -am 'Add some feature'`)
+* Push to the branch (`git push origin my-new-feature`)
 * Create new Pull Request
