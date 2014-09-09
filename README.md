@@ -1,6 +1,6 @@
 # jmx-wrench
 
-A remote management tool for Managed Beans. Developed with the intention to be small and easy to use. Use Maven with "mvn package" to build the ".war", deploy it onto an application server and get access to all MBeans in the JVM. The basic layout is as followed:
+A remote management tool for Managed Beans. Developed with the intention to be small and easy to use. Use Maven with `mvn package` to build the `.war`, deploy it onto an application server and get access to all MBeans in the JVM. The basic layout is as followed:
 
 ![ScreenShot](detailScreen.png)
 
@@ -20,8 +20,8 @@ A remote management tool for Managed Beans. Developed with the intention to be s
     # build the .war
     mvn package
 
-Deploy it onto your application server (e.g. Tomcat: move the war-file into the webapp-folder) under the context /jmx-wrench.
-You can access it with: http://<application-server>/jmx-wrench
+Deploy it onto your application server (e.g. Tomcat: move the war-file into the webapp-folder) under the context `/jmx-wrench`.
+You can access it with: `http://<application-server>/jmx-wrench`
 
 ### Note
 
