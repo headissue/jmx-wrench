@@ -1,6 +1,8 @@
 # jmx-wrench
 
+
 JMX-Wrench is a remote management tool to efficiently access and configure your Managed Beans. It was developed to be small and easy to install and easy to use.
+
 
 ![ScreenShot](detailScreen.png)
 
@@ -20,13 +22,13 @@ JMX-Wrench is a remote management tool to efficiently access and configure your 
     # build the .war
     mvn package
 
-Deploy it onto your application server (e.g. Tomcat: move the war-file into the webapp-folder) under the context /jmx-wrench.
-You can access it with: http://<application-server>/jmx-wrench
+Deploy it onto your application server (e.g. Tomcat: move the war-file into the webapp-folder) under the context `/jmx-wrench`.
+You can access it with: `http://<application-server>/jmx-wrench`
 
 ### Note
 
-To prevent unwanted access, there are several security constraints installed.
-If your are only interested in a quick local setup, just remove the security constraints from the web.xml under /src/main/webapp/WEB-INF or comment them out.
+To prevent unwanted access, there are several security constraints installed in the `web.xml` under `/src/main/webapp/WEB-INF`.
+If your are only interested in a quick local setup, just remove the security constraints or comment them out.
 
 ## Features
 
