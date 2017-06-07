@@ -159,6 +159,8 @@ public class Wrench {
         return new Date(Integer.valueOf(_value));
       case "boolean":
         return Boolean.valueOf(_value);
+      case "double":
+        return Double.valueOf(_value);
     }
     return _value;
   }
